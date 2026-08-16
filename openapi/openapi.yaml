@@ -6,6 +6,130 @@ info:
     title: steam-api
     version: 0.0.1
 paths:
+    /v1/steamallgames/apps:
+        get:
+            tags:
+                - SteamAllGamesService
+            description: GetAppListV2 使用 ISteamApps/GetAppList/v2 获取全部应用列表（一次性返回）。
+            operationId: SteamAllGamesService_GetAppListV2
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/steamallgames.v1.GetAppListV2Response'
+    /v1/steamallgames/store-apps:
+        get:
+            tags:
+                - SteamAllGamesService
+            description: |-
+                GetStoreAppList 使用 IStoreService/GetAppList/v1 分页获取应用列表，
+                 服务端自动翻页直到取完所有数据。
+            operationId: SteamAllGamesService_GetStoreAppList
+            parameters:
+                - name: ifModifiedSince
+                  in: query
+                  description: 仅返回该时间戳之后修改的应用。
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: haveDescriptionLanguage
+                  in: query
+                  description: 描述语言过滤。
+                  schema:
+                    type: string
+                - name: includeGames
+                  in: query
+                  description: 是否包含游戏。未指定时按 false 处理（与 store API 默认值对齐）。
+                  schema:
+                    type: boolean
+                - name: includeDlc
+                  in: query
+                  description: 是否包含 DLC。
+                  schema:
+                    type: boolean
+                - name: includeSoftware
+                  in: query
+                  description: 是否包含软件。
+                  schema:
+                    type: boolean
+                - name: includeVideos
+                  in: query
+                  description: 是否包含视频。
+                  schema:
+                    type: boolean
+                - name: includeHardware
+                  in: query
+                  description: 是否包含硬件。
+                  schema:
+                    type: boolean
+                - name: lastAppid
+                  in: query
+                  description: 分页：从该 appid 之后开始返回。
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: maxResults
+                  in: query
+                  description: 每页最大数量，默认 10k，最大 50k。
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/steamallgames.v1.GetStoreAppListResponse'
+    /v1/steamdetail/appdetails:
+        get:
+            tags:
+                - SteamDetailService
+            description: |-
+                GetAppDetails 获取指定应用（appids）的详情数据。
+                 返回的 raw_json 为 api/appdetails 接口的原始 JSON 响应体
+                 （以 appid 为 key 的应用详情 map），解析与落库由调用方完成。
+            operationId: SteamDetailService_GetAppDetails
+            parameters:
+                - name: appIds
+                  in: query
+                  description: 要查询的应用 ID 列表。
+                  schema:
+                    type: array
+                    items:
+                        type: integer
+                        format: int32
+                - name: language
+                  in: query
+                  description: Steam 语言代码，如 schinese / english。
+                  schema:
+                    type: string
+                - name: currency
+                  in: query
+                  description: Steam 货币代码，如 cn / us。
+                  schema:
+                    type: string
+                - name: filters
+                  in: query
+                  description: 过滤字段列表（filters），为空时不限制。
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: noPriceOverview
+                  in: query
+                  description: 是否不使用 price_overview 过滤（为 true 时 filters 参数生效）。
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/steamdetail.v1.AppDetails'
     /v1/steamonline/players/{appId}:
         get:
             tags:
@@ -42,6 +166,70 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/steamonline.v1.OnlinePlayers'
+    /v1/steamreview/pages/{appId}:
+        get:
+            tags:
+                - SteamReviewService
+            description: |-
+                FetchReviewsPage 获取单页 Steam 评论原始数据。
+                 返回的 raw_json 为 appreviews 接口的原始 JSON 响应体
+                 （包含 reviews / cursor / query_summary 等字段），解析与落库由调用方完成。
+            operationId: SteamReviewService_FetchReviewsPage
+            parameters:
+                - name: appId
+                  in: path
+                  description: 游戏的 Steam AppID。
+                  required: true
+                  schema:
+                    type: integer
+                    format: int32
+                - name: cursor
+                  in: query
+                  description: 分页游标，首页传 "*"。
+                  schema:
+                    type: string
+                - name: numPerPage
+                  in: query
+                  description: 每页评论数量。
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/steamreview.v1.ReviewsPage'
+    /v1/steamspecials/pages:
+        get:
+            tags:
+                - SteamSpecialsService
+            description: |-
+                FetchSpecialsPage 获取单页折扣游戏列表。
+                 返回的 results_html 为搜索接口返回的原始 HTML 片段，
+                 由调用方负责解析为游戏条目。
+            operationId: SteamSpecialsService_FetchSpecialsPage
+            parameters:
+                - name: start
+                  in: query
+                  description: 起始偏移量（第几个游戏开始），0 为首页。
+                  schema:
+                    type: integer
+                    format: int32
+                - name: count
+                  in: query
+                  description: 每页数量。
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/steamspecials.v1.SpecialsPage'
     /v1/todos/create:
         post:
             tags:
@@ -258,6 +446,74 @@ paths:
                     content: {}
 components:
     schemas:
+        steamallgames.v1.AppInfo:
+            type: object
+            properties:
+                appid:
+                    type: integer
+                    description: 应用 ID。
+                    format: int32
+                name:
+                    type: string
+                    description: 应用名称。
+            description: AppInfo 是一个 Steam 应用的基本信息（ISteamApps/GetAppList/v2）。
+        steamallgames.v1.GetAppListV2Response:
+            type: object
+            properties:
+                apps:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/steamallgames.v1.AppInfo'
+                    description: 全部应用列表。
+            description: GetAppListV2Response 是 SteamAllGamesService.GetAppListV2 的输出。
+        steamallgames.v1.GetStoreAppListResponse:
+            type: object
+            properties:
+                apps:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/steamallgames.v1.StoreAppInfo'
+                    description: 应用列表（服务端已自动翻页累积）。
+                lastAppid:
+                    type: integer
+                    description: 最后返回的应用 ID。
+                    format: uint32
+                haveMoreResults:
+                    type: boolean
+                    description: 是否还有更多结果。
+            description: GetStoreAppListResponse 是 SteamAllGamesService.GetStoreAppList 的输出。
+        steamallgames.v1.StoreAppInfo:
+            type: object
+            properties:
+                appid:
+                    type: string
+                    description: 应用 ID。
+                name:
+                    type: string
+                    description: 应用名称。
+                lastModified:
+                    type: integer
+                    description: 最后修改时间戳。
+                    format: uint32
+                priceChangeNumber:
+                    type: integer
+                    description: 价格变更号。
+                    format: uint32
+            description: StoreAppInfo 是一个 Steam 商店应用信息（IStoreService/GetAppList/v1）。
+        steamdetail.v1.AppDetails:
+            type: object
+            properties:
+                appIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: int32
+                    description: 查询的应用 ID 列表。
+                rawJson:
+                    type: string
+                    description: api/appdetails 接口返回的原始 JSON 响应体。
+                    format: bytes
+            description: AppDetails 是一次应用详情查询结果。
         steamonline.v1.OnlinePlayers:
             type: object
             properties:
@@ -278,6 +534,41 @@ components:
                     description: 抓取完成时间。
                     format: date-time
             description: OnlinePlayers 是一次在线玩家数查询结果。
+        steamreview.v1.ReviewsPage:
+            type: object
+            properties:
+                appId:
+                    type: integer
+                    description: 游戏的 Steam AppID。
+                    format: int32
+                rawJson:
+                    type: string
+                    description: appreviews 接口返回的原始 JSON 响应体。
+                    format: bytes
+            description: ReviewsPage 是一页 Steam 评论抓取结果。
+        steamspecials.v1.SpecialsPage:
+            type: object
+            properties:
+                success:
+                    type: integer
+                    description: 接口状态码，1 表示成功。
+                    format: int32
+                resultsHtml:
+                    type: string
+                    description: 搜索结果的原始 HTML 片段。
+                totalCount:
+                    type: integer
+                    description: 折扣游戏总数。
+                    format: int32
+                start:
+                    type: integer
+                    description: 当前页起始偏移量。
+                    format: int32
+                pagesize:
+                    type: integer
+                    description: 每页数量。
+                    format: int32
+            description: SpecialsPage 是一页折扣游戏列表结果。
         todo.v1.SyncTodoRequest:
             type: object
             properties:
@@ -358,11 +649,27 @@ components:
                          Empty when there are no more results.
             description: TodoSet is a paginated collection of todo items returned by ListTodos.
 tags:
+    - name: SteamAllGamesService
+      description: |-
+        SteamAllGamesService 提供 Steam 应用列表抓取能力。
+         对应 steam-tasks 中 handlers/steam_all_games 的 SteamAppListAPI 客户端逻辑。
+    - name: SteamDetailService
+      description: |-
+        SteamDetailService 提供 Steam 应用详情抓取能力。
+         对应 steam-tasks 中 handlers/steam_detail 的 SteamAppDetailAPI 客户端逻辑。
     - name: SteamOnlineService
       description: |-
         SteamOnlineService 提供 Steam 在线玩家数查询能力。
          对应 steam-tasks 中 handlers/steam_online 的 SteamOnlineAPI 客户端逻辑，
          支持四种数据源抓取在线玩家数。
+    - name: SteamReviewService
+      description: |-
+        SteamReviewService 提供 Steam 评论抓取能力。
+         对应 steam-tasks 中 handlers/steam_review 的 SteamReviewsAPI 客户端逻辑。
+    - name: SteamSpecialsService
+      description: |-
+        SteamSpecialsService 提供 Steam 折扣游戏列表抓取能力。
+         对应 steam-tasks 中 handlers/steam_specials 的 SteamSpecialsAPI 客户端逻辑。
     - name: TodoService
       description: |-
         TodoService provides a simple CRUD example for managing todo items.
