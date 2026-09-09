@@ -83,6 +83,140 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/steamallgames.v1.GetStoreAppListResponse'
+    /v1/steamdb/apps/{appId}:
+        get:
+            tags:
+                - SteamDBService
+            description: |-
+                GetAppPage 抓取单个 App 的 SteamDB 信息页，可选附带子页（charts/depots/configs）。
+                 返回 raw_json 为上游解析后的 JSON（含 name/developer/价格/tags/DLC/社交链接等）。
+                 注意：history/stats/patchnotes 子页为 JS 渲染，上游不支持。
+            operationId: SteamDBService_GetAppPage
+            parameters:
+                - name: appId
+                  in: path
+                  description: Steam AppID。
+                  required: true
+                  schema:
+                    type: integer
+                    format: int32
+                - name: cc
+                  in: query
+                  description: 国家代码（价格展示用），默认 ca。
+                  schema:
+                    type: string
+                - name: subpages
+                  in: query
+                  description: 需要一并抓取的子页列表：charts / depots / configs / all。
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/steamdb.v1.GetAppPageReply'
+    /v1/steamdb/enrich:
+        get:
+            tags:
+                - SteamDBService
+            description: |-
+                EnrichAppIDs 富化一组 AppID（SteamDB 扩展 API 玩家统计/历史最低价 +
+                 Steam Store 详情 + 在线人数 + 评论摘要 + SteamSpy），不抓取 SteamDB 页面，
+                 是大批量 per-appid 数据的低风险通道。
+                 上游同步串行处理，单个 AppID 约 2~3s，调用方需控制 app_ids 数量（网关超时 120s）。
+            operationId: SteamDBService_EnrichAppIDs
+            parameters:
+                - name: appIds
+                  in: query
+                  description: 要富化的 AppID 列表（上游单次上限 50，建议 ≤ 30 以避开网关超时）。
+                  schema:
+                    type: array
+                    items:
+                        type: integer
+                        format: int32
+                - name: currencies
+                  in: query
+                  description: 逗号分隔的币种列表，如 "CNY,USD"（默认 USD,EUR,GBP；每多一个币种 = 每 AppID 多一次上游调用）。
+                  schema:
+                    type: string
+                - name: noDetails
+                  in: query
+                  description: 是否跳过 Steam 商店详情。
+                  schema:
+                    type: boolean
+                - name: noPrices
+                  in: query
+                  description: 是否跳过历史最低价。
+                  schema:
+                    type: boolean
+                - name: noSteamspy
+                  in: query
+                  description: 是否跳过 SteamSpy 数据。
+                  schema:
+                    type: boolean
+                - name: delaySeconds
+                  in: query
+                  description: 相邻 AppID 之间的间隔秒数（0~10，默认 0.3），防止打爆上游。
+                  schema:
+                    type: number
+                    format: double
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/steamdb.v1.EnrichAppIDsReply'
+    /v1/steamdb/lists:
+        get:
+            tags:
+                - SteamDBService
+            description: GetListPage 抓取 SteamDB 列表页（榜单/即将发售/当前折扣），返回 raw_json。
+            operationId: SteamDBService_GetListPage
+            parameters:
+                - name: kind
+                  in: query
+                  description: 列表页类型。
+                  schema:
+                    type: integer
+                    format: enum
+                - name: chartType
+                  in: query
+                  description: kind=CHARTS 时必填：topsellers / mostwished / mostplayed / topnew / trending。
+                  schema:
+                    type: string
+                - name: cc
+                  in: query
+                  description: 国家代码（价格展示用），默认 ca。
+                  schema:
+                    type: string
+                - name: week
+                  in: query
+                  description: kind=UPCOMING 时可选：周标识，如 2025W26；为空则取当前周。
+                  schema:
+                    type: string
+                - name: displayOnly
+                  in: query
+                  description: kind=UPCOMING 时可选：类型过滤（Game/DLC/...），默认 Game。
+                  schema:
+                    type: string
+                - name: minDiscount
+                  in: query
+                  description: kind=SALES 时可选：最低折扣百分比（0~100）。
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/steamdb.v1.GetListPageReply'
     /v1/steamdetail/appdetails:
         get:
             tags:
@@ -500,6 +634,60 @@ components:
                     description: 价格变更号。
                     format: uint32
             description: StoreAppInfo 是一个 Steam 商店应用信息（IStoreService/GetAppList/v1）。
+        steamdb.v1.EnrichAppIDsReply:
+            type: object
+            properties:
+                fetchedAt:
+                    type: string
+                    description: 上游处理时间（ISO8601）。
+                apps:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/steamdb.v1.SteamDBEnrichedApp'
+                    description: 成功富化的 App 列表（失败/不存在的 AppID 会被上游跳过）。
+            description: EnrichAppIDsReply 是一次批量富化结果。
+        steamdb.v1.GetAppPageReply:
+            type: object
+            properties:
+                appId:
+                    type: integer
+                    description: Steam AppID。
+                    format: int32
+                rawJson:
+                    type: string
+                    description: 上游返回的原始 JSON（info 页字段 + 可选 charts/depots/configs 子对象）。
+                    format: bytes
+            description: GetAppPageReply 是 App 信息页抓取结果。
+        steamdb.v1.GetListPageReply:
+            type: object
+            properties:
+                kind:
+                    type: integer
+                    description: 列表页类型（回显）。
+                    format: enum
+                paramsJson:
+                    type: string
+                    description: 请求参数回显（JSON，如 {"chart_type":"topsellers"}）。
+                    format: bytes
+                rawJson:
+                    type: string
+                    description: 上游返回的原始 JSON（榜单 items / upcoming games / sales 列表）。
+                    format: bytes
+            description: GetListPageReply 是列表页抓取结果。
+        steamdb.v1.SteamDBEnrichedApp:
+            type: object
+            properties:
+                appId:
+                    type: integer
+                    description: Steam AppID。
+                    format: int32
+                rawJson:
+                    type: string
+                    description: |-
+                        上游富化结果的原始 JSON（player_stats / lowest_prices / reviews / steamspy 等），
+                         解析与落库由调用方完成。
+                    format: bytes
+            description: SteamDBEnrichedApp 是单个 App 的富化结果。
         steamdetail.v1.AppDetails:
             type: object
             properties:
@@ -653,6 +841,11 @@ tags:
       description: |-
         SteamAllGamesService 提供 Steam 应用列表抓取能力。
          对应 steam-tasks 中 handlers/steam_all_games 的 SteamAppListAPI 客户端逻辑。
+    - name: SteamDBService
+      description: |-
+        SteamDBService 提供 SteamDB 数据源代理能力（lg-steamdb-scraper HTTP 服务）。
+         上游为部署在集群内的 steamdb-scraper（默认 https://steamdb.k.mygo.rocks），
+         负责Cloudflare 绕过与多数据源富化；本服务只做透传与轻量封装。
     - name: SteamDetailService
       description: |-
         SteamDetailService 提供 Steam 应用详情抓取能力。
