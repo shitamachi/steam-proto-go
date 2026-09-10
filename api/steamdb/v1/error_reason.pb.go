@@ -35,6 +35,9 @@ const (
 	ErrorReason_STEAMDB_NETWORK ErrorReason = 3
 	// 上游触发 SteamDB 侧限流（429/403），调用方应退避或熔断。
 	ErrorReason_STEAMDB_RATE_LIMITED ErrorReason = 4
+	// 上游资源已下线（如 SteamDB 下架某榜单页，404/410 或 upstream_removed 标记）。
+	// 永久失败：调用方应丢弃任务，不重试、不熔断。
+	ErrorReason_STEAMDB_UPSTREAM_GONE ErrorReason = 5
 )
 
 // Enum value maps for ErrorReason.
@@ -45,6 +48,7 @@ var (
 		2: "STEAMDB_INVALID_DATA",
 		3: "STEAMDB_NETWORK",
 		4: "STEAMDB_RATE_LIMITED",
+		5: "STEAMDB_UPSTREAM_GONE",
 	}
 	ErrorReason_value = map[string]int32{
 		"STEAMDB_UNSPECIFIED":      0,
@@ -52,6 +56,7 @@ var (
 		"STEAMDB_INVALID_DATA":     2,
 		"STEAMDB_NETWORK":          3,
 		"STEAMDB_RATE_LIMITED":     4,
+		"STEAMDB_UPSTREAM_GONE":    5,
 	}
 )
 
@@ -87,13 +92,14 @@ var File_steamdb_v1_error_reason_proto protoreflect.FileDescriptor
 const file_steamdb_v1_error_reason_proto_rawDesc = "" +
 	"\n" +
 	"\x1dsteamdb/v1/error_reason.proto\x12\n" +
-	"steamdb.v1*\x8d\x01\n" +
+	"steamdb.v1*\xa8\x01\n" +
 	"\vErrorReason\x12\x17\n" +
 	"\x13STEAMDB_UNSPECIFIED\x10\x00\x12\x1c\n" +
 	"\x18STEAMDB_INVALID_ARGUMENT\x10\x01\x12\x18\n" +
 	"\x14STEAMDB_INVALID_DATA\x10\x02\x12\x13\n" +
 	"\x0fSTEAMDB_NETWORK\x10\x03\x12\x18\n" +
-	"\x14STEAMDB_RATE_LIMITED\x10\x04B_\n" +
+	"\x14STEAMDB_RATE_LIMITED\x10\x04\x12\x19\n" +
+	"\x15STEAMDB_UPSTREAM_GONE\x10\x05B_\n" +
 	"\n" +
 	"steamdb.v1B\x17SteamDBErrorReasonProtoP\x01Z6github.com/shitamachi/steam-proto-go/api/steamdb/v1;v1b\x06proto3"
 
