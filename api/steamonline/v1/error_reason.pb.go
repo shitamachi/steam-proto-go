@@ -28,6 +28,7 @@ const (
 	ErrorReason_STEAMONLINE_NOT_FOUND        ErrorReason = 1
 	ErrorReason_STEAMONLINE_INVALID_ARGUMENT ErrorReason = 2
 	ErrorReason_STEAMONLINE_AGE_VERIFICATION ErrorReason = 3
+	ErrorReason_STEAMONLINE_PARSE_FAILED     ErrorReason = 4
 )
 
 // Enum value maps for ErrorReason.
@@ -37,12 +38,14 @@ var (
 		1: "STEAMONLINE_NOT_FOUND",
 		2: "STEAMONLINE_INVALID_ARGUMENT",
 		3: "STEAMONLINE_AGE_VERIFICATION",
+		4: "STEAMONLINE_PARSE_FAILED",
 	}
 	ErrorReason_value = map[string]int32{
 		"STEAMONLINE_UNSPECIFIED":      0,
 		"STEAMONLINE_NOT_FOUND":        1,
 		"STEAMONLINE_INVALID_ARGUMENT": 2,
 		"STEAMONLINE_AGE_VERIFICATION": 3,
+		"STEAMONLINE_PARSE_FAILED":     4,
 	}
 )
 
@@ -77,12 +80,13 @@ var File_steamonline_v1_error_reason_proto protoreflect.FileDescriptor
 
 const file_steamonline_v1_error_reason_proto_rawDesc = "" +
 	"\n" +
-	"!steamonline/v1/error_reason.proto\x12\x0esteamonline.v1*\x89\x01\n" +
+	"!steamonline/v1/error_reason.proto\x12\x0esteamonline.v1*\xa7\x01\n" +
 	"\vErrorReason\x12\x1b\n" +
 	"\x17STEAMONLINE_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15STEAMONLINE_NOT_FOUND\x10\x01\x12 \n" +
 	"\x1cSTEAMONLINE_INVALID_ARGUMENT\x10\x02\x12 \n" +
-	"\x1cSTEAMONLINE_AGE_VERIFICATION\x10\x03Ba\n" +
+	"\x1cSTEAMONLINE_AGE_VERIFICATION\x10\x03\x12\x1c\n" +
+	"\x18STEAMONLINE_PARSE_FAILED\x10\x04Ba\n" +
 	"\x0esteamonline.v1P\x01Z:github.com/shitamachi/steam-proto-go/api/steamonline/v1;v1\xa2\x02\x10APISteamOnlineV1b\x06proto3"
 
 var (
