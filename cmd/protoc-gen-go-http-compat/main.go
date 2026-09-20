@@ -19,7 +19,7 @@ import (
 	"google.golang.org/protobuf/types/pluginpb"
 )
 
-const upstream = "github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v3@v3.0.0-20260526000039-30da04b769dc"
+const upstream = "github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v3@v3.0.0-20260626125723-668db92c2c00"
 const bindingImport = "github.com/shitamachi/steam-proto-go/internal/httpbinding"
 
 func main() {
