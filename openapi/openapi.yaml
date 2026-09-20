@@ -24,8 +24,9 @@ paths:
             tags:
                 - SteamAllGamesService
             description: |-
-                GetStoreAppList 使用 IStoreService/GetAppList/v1 分页获取应用列表，
-                 服务端自动翻页直到取完所有数据。
+                GetStoreAppList 使用 IStoreService/GetAppList/v1 获取单页应用列表，
+                 调用方用 last_appid/have_more_results 循环翻页取全量。
+                 服务端单页上限 5k（请求更大值会被钳制），避免大包超 gRPC 消息限制。
             operationId: SteamAllGamesService_GetStoreAppList
             parameters:
                 - name: ifModifiedSince
@@ -607,7 +608,7 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/steamallgames.v1.StoreAppInfo'
-                    description: 应用列表（服务端已自动翻页累积）。
+                    description: 本页应用列表。
                 lastAppid:
                     type: integer
                     description: 最后返回的应用 ID。

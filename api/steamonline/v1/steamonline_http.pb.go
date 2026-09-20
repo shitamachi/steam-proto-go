@@ -9,6 +9,7 @@ package v1
 import (
 	context "context"
 	http "github.com/go-kratos/kratos/v3/transport/http"
+	steamhttpbinding "github.com/shitamachi/steam-proto-go/internal/httpbinding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -74,7 +75,7 @@ func NewSteamOnlineServiceHTTPClient(client *http.Client) SteamOnlineServiceHTTP
 func (c *SteamOnlineServiceHTTPClientImpl) GetOnlinePlayers(ctx context.Context, in *GetOnlinePlayersRequest, opts ...http.CallOption) (*OnlinePlayers, error) {
 	var out OnlinePlayers
 	pattern := "/v1/steamonline/players/{app_id}"
-	path := http.BuildPath(pattern, in, http.WithQueryParams())
+	path := steamhttpbinding.BuildPath(pattern, in, http.WithQueryParams())
 	opts = append([]http.CallOption{
 		http.Accept("application/protojson"),
 		http.Operation(OperationSteamOnlineServiceGetOnlinePlayers),

@@ -9,6 +9,7 @@ package v1
 import (
 	context "context"
 	http "github.com/go-kratos/kratos/v3/transport/http"
+	steamhttpbinding "github.com/shitamachi/steam-proto-go/internal/httpbinding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -74,7 +75,7 @@ func NewSteamReviewServiceHTTPClient(client *http.Client) SteamReviewServiceHTTP
 func (c *SteamReviewServiceHTTPClientImpl) FetchReviewsPage(ctx context.Context, in *FetchReviewsPageRequest, opts ...http.CallOption) (*ReviewsPage, error) {
 	var out ReviewsPage
 	pattern := "/v1/steamreview/pages/{app_id}"
-	path := http.BuildPath(pattern, in, http.WithQueryParams())
+	path := steamhttpbinding.BuildPath(pattern, in, http.WithQueryParams())
 	opts = append([]http.CallOption{
 		http.Accept("application/protojson"),
 		http.Operation(OperationSteamReviewServiceFetchReviewsPage),

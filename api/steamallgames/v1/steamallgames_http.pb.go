@@ -9,6 +9,7 @@ package v1
 import (
 	context "context"
 	http "github.com/go-kratos/kratos/v3/transport/http"
+	steamhttpbinding "github.com/shitamachi/steam-proto-go/internal/httpbinding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -23,8 +24,9 @@ const OperationSteamAllGamesServiceGetStoreAppList = "/steamallgames.v1.SteamAll
 type SteamAllGamesServiceHTTPServer interface {
 	// GetAppListV2 GetAppListV2 使用 ISteamApps/GetAppList/v2 获取全部应用列表（一次性返回）。
 	GetAppListV2(context.Context, *GetAppListV2Request) (*GetAppListV2Response, error)
-	// GetStoreAppList GetStoreAppList 使用 IStoreService/GetAppList/v1 分页获取应用列表，
-	// 服务端自动翻页直到取完所有数据。
+	// GetStoreAppList GetStoreAppList 使用 IStoreService/GetAppList/v1 获取单页应用列表，
+	// 调用方用 last_appid/have_more_results 循环翻页取全量。
+	// 服务端单页上限 5k（请求更大值会被钳制），避免大包超 gRPC 消息限制。
 	GetStoreAppList(context.Context, *GetStoreAppListRequest) (*GetStoreAppListResponse, error)
 }
 
@@ -75,8 +77,9 @@ func _SteamAllGamesService_GetStoreAppList0_HTTP_Handler(srv SteamAllGamesServic
 type SteamAllGamesServiceHTTPClient interface {
 	// GetAppListV2 GetAppListV2 使用 ISteamApps/GetAppList/v2 获取全部应用列表（一次性返回）。
 	GetAppListV2(ctx context.Context, req *GetAppListV2Request, opts ...http.CallOption) (rsp *GetAppListV2Response, err error)
-	// GetStoreAppList GetStoreAppList 使用 IStoreService/GetAppList/v1 分页获取应用列表，
-	// 服务端自动翻页直到取完所有数据。
+	// GetStoreAppList GetStoreAppList 使用 IStoreService/GetAppList/v1 获取单页应用列表，
+	// 调用方用 last_appid/have_more_results 循环翻页取全量。
+	// 服务端单页上限 5k（请求更大值会被钳制），避免大包超 gRPC 消息限制。
 	GetStoreAppList(ctx context.Context, req *GetStoreAppListRequest, opts ...http.CallOption) (rsp *GetStoreAppListResponse, err error)
 }
 
@@ -92,7 +95,7 @@ func NewSteamAllGamesServiceHTTPClient(client *http.Client) SteamAllGamesService
 func (c *SteamAllGamesServiceHTTPClientImpl) GetAppListV2(ctx context.Context, in *GetAppListV2Request, opts ...http.CallOption) (*GetAppListV2Response, error) {
 	var out GetAppListV2Response
 	pattern := "/v1/steamallgames/apps"
-	path := http.BuildPath(pattern, in, http.WithQueryParams())
+	path := steamhttpbinding.BuildPath(pattern, in, http.WithQueryParams())
 	opts = append([]http.CallOption{
 		http.Accept("application/protojson"),
 		http.Operation(OperationSteamAllGamesServiceGetAppListV2),
@@ -105,12 +108,13 @@ func (c *SteamAllGamesServiceHTTPClientImpl) GetAppListV2(ctx context.Context, i
 	return &out, nil
 }
 
-// GetStoreAppList GetStoreAppList 使用 IStoreService/GetAppList/v1 分页获取应用列表，
-// 服务端自动翻页直到取完所有数据。
+// GetStoreAppList GetStoreAppList 使用 IStoreService/GetAppList/v1 获取单页应用列表，
+// 调用方用 last_appid/have_more_results 循环翻页取全量。
+// 服务端单页上限 5k（请求更大值会被钳制），避免大包超 gRPC 消息限制。
 func (c *SteamAllGamesServiceHTTPClientImpl) GetStoreAppList(ctx context.Context, in *GetStoreAppListRequest, opts ...http.CallOption) (*GetStoreAppListResponse, error) {
 	var out GetStoreAppListResponse
 	pattern := "/v1/steamallgames/store-apps"
-	path := http.BuildPath(pattern, in, http.WithQueryParams())
+	path := steamhttpbinding.BuildPath(pattern, in, http.WithQueryParams())
 	opts = append([]http.CallOption{
 		http.Accept("application/protojson"),
 		http.Operation(OperationSteamAllGamesServiceGetStoreAppList),

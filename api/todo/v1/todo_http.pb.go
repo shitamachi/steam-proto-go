@@ -9,6 +9,7 @@ package v1
 import (
 	context "context"
 	http "github.com/go-kratos/kratos/v3/transport/http"
+	steamhttpbinding "github.com/shitamachi/steam-proto-go/internal/httpbinding"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -285,7 +286,7 @@ func (x *TodoService_SyncTodosHTTPClient) open(m *SyncTodoRequest) error {
 		return nil
 	}
 	opts := x.opts
-	path := http.BuildPath(x.pattern, m)
+	path := steamhttpbinding.BuildPath(x.pattern, m)
 	stream, err := x.cc.WebSocket(x.ctx, path, opts...)
 	if err != nil {
 		return err
@@ -336,7 +337,7 @@ func (x *TodoService_WatchTodosHTTPClient) Recv() (*TodoEvent, error) {
 func (c *TodoServiceHTTPClientImpl) CreateTodo(ctx context.Context, in *CreateTodoRequest, opts ...http.CallOption) (*Todo, error) {
 	var out Todo
 	pattern := "/v1/todos/create"
-	path := http.BuildPath(pattern, in, http.WithQueryParams(), http.WithOmitFields("todo"))
+	path := steamhttpbinding.BuildPath(pattern, in, http.WithQueryParams(), http.WithOmitFields("todo"))
 	opts = append([]http.CallOption{
 		http.Accept("application/protojson"),
 		http.ContentType("application/protojson"),
@@ -355,7 +356,7 @@ func (c *TodoServiceHTTPClientImpl) CreateTodo(ctx context.Context, in *CreateTo
 func (c *TodoServiceHTTPClientImpl) DeleteTodo(ctx context.Context, in *DeleteTodoRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/v1/todos/{id}"
-	path := http.BuildPath(pattern, in, http.WithQueryParams())
+	path := steamhttpbinding.BuildPath(pattern, in, http.WithQueryParams())
 	opts = append([]http.CallOption{
 		http.Accept("application/protojson"),
 		http.Operation(OperationTodoServiceDeleteTodo),
@@ -373,7 +374,7 @@ func (c *TodoServiceHTTPClientImpl) DeleteTodo(ctx context.Context, in *DeleteTo
 func (c *TodoServiceHTTPClientImpl) GetTodo(ctx context.Context, in *GetTodoRequest, opts ...http.CallOption) (*Todo, error) {
 	var out Todo
 	pattern := "/v1/todos/{id}"
-	path := http.BuildPath(pattern, in, http.WithQueryParams())
+	path := steamhttpbinding.BuildPath(pattern, in, http.WithQueryParams())
 	opts = append([]http.CallOption{
 		http.Accept("application/protojson"),
 		http.Operation(OperationTodoServiceGetTodo),
@@ -392,7 +393,7 @@ func (c *TodoServiceHTTPClientImpl) GetTodo(ctx context.Context, in *GetTodoRequ
 func (c *TodoServiceHTTPClientImpl) ListTodos(ctx context.Context, in *ListTodosRequest, opts ...http.CallOption) (*TodoSet, error) {
 	var out TodoSet
 	pattern := "/v1/todos/list"
-	path := http.BuildPath(pattern, in, http.WithQueryParams())
+	path := steamhttpbinding.BuildPath(pattern, in, http.WithQueryParams())
 	opts = append([]http.CallOption{
 		http.Accept("application/protojson"),
 		http.Operation(OperationTodoServiceListTodos),
@@ -428,7 +429,7 @@ func (c *TodoServiceHTTPClientImpl) SyncTodos(ctx context.Context, opts ...http.
 func (c *TodoServiceHTTPClientImpl) UpdateTodo(ctx context.Context, in *UpdateTodoRequest, opts ...http.CallOption) (*Todo, error) {
 	var out Todo
 	pattern := "/v1/todos/update"
-	path := http.BuildPath(pattern, in, http.WithQueryParams(), http.WithOmitFields("todo"))
+	path := steamhttpbinding.BuildPath(pattern, in, http.WithQueryParams(), http.WithOmitFields("todo"))
 	opts = append([]http.CallOption{
 		http.Accept("application/protojson"),
 		http.ContentType("application/protojson"),
@@ -447,7 +448,7 @@ func (c *TodoServiceHTTPClientImpl) UpdateTodo(ctx context.Context, in *UpdateTo
 // The stream remains open until the client cancels or the server terminates it.
 func (c *TodoServiceHTTPClientImpl) WatchTodos(ctx context.Context, in *WatchTodosRequest, opts ...http.CallOption) (TodoService_WatchTodosClient, error) {
 	pattern := "/v1/todos/watch"
-	path := http.BuildPath(pattern, in, http.WithQueryParams())
+	path := steamhttpbinding.BuildPath(pattern, in, http.WithQueryParams())
 	opts = append([]http.CallOption{
 		http.Accept("text/event-stream"),
 		http.ContentType("application/protojson"),

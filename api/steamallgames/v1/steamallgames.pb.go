@@ -354,7 +354,7 @@ func (x *GetStoreAppListRequest) GetMaxResults() uint32 {
 // GetStoreAppListResponse 是 SteamAllGamesService.GetStoreAppList 的输出。
 type GetStoreAppListResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 应用列表（服务端已自动翻页累积）。
+	// 本页应用列表。
 	Apps []*StoreAppInfo `protobuf:"bytes,1,rep,name=apps,proto3" json:"apps,omitempty"`
 	// 最后返回的应用 ID。
 	LastAppid uint32 `protobuf:"varint,2,opt,name=last_appid,json=lastAppid,proto3" json:"last_appid,omitempty"`

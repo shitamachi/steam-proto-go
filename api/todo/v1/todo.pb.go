@@ -276,18 +276,17 @@ type ListTodosRequest struct {
 	PageToken string `protobuf:"bytes,2,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	// Optional. The standard list filter.
 	// Supported fields:
-	//   - `title` (i.e. `title:"bug"`)
-	//   - `content` (i.e. `content:"docs"`)
-	//   - `completed` (i.e. `completed` or `NOT completed`)
-	//   - `create_time` range (i.e. `create_time>="2026-01-01T00:00:00Z"`)
+	//    * `title` (i.e. `title:"bug"`)
+	//    * `content` (i.e. `content:"docs"`)
+	//    * `completed` (i.e. `completed` or `NOT completed`)
+	//    * `create_time` range (i.e. `create_time>="2026-01-01T00:00:00Z"`)
 	Filter string `protobuf:"bytes,3,opt,name=filter,proto3" json:"filter,omitempty"`
 	// Optional. A comma-separated list of fields to order by.
 	// Supported fields:
-	//   - `id`
-	//   - `title`
-	//   - `create_time`
-	//   - `update_time`
-	//
+	//    * `id`
+	//    * `title`
+	//    * `create_time`
+	//    * `update_time`
 	// Append ` desc` to a field for descending order, e.g. `create_time desc`.
 	// Defaults to ascending order when no direction is supplied.
 	OrderBy       string `protobuf:"bytes,4,opt,name=order_by,json=orderBy,proto3" json:"order_by,omitempty"`

@@ -9,6 +9,7 @@ package v1
 import (
 	context "context"
 	http "github.com/go-kratos/kratos/v3/transport/http"
+	steamhttpbinding "github.com/shitamachi/steam-proto-go/internal/httpbinding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -71,7 +72,7 @@ func NewSteamDetailServiceHTTPClient(client *http.Client) SteamDetailServiceHTTP
 func (c *SteamDetailServiceHTTPClientImpl) GetAppDetails(ctx context.Context, in *GetAppDetailsRequest, opts ...http.CallOption) (*AppDetails, error) {
 	var out AppDetails
 	pattern := "/v1/steamdetail/appdetails"
-	path := http.BuildPath(pattern, in, http.WithQueryParams())
+	path := steamhttpbinding.BuildPath(pattern, in, http.WithQueryParams())
 	opts = append([]http.CallOption{
 		http.Accept("application/protojson"),
 		http.Operation(OperationSteamDetailServiceGetAppDetails),

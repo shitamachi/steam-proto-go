@@ -32,8 +32,9 @@ const (
 type SteamAllGamesServiceClient interface {
 	// GetAppListV2 使用 ISteamApps/GetAppList/v2 获取全部应用列表（一次性返回）。
 	GetAppListV2(ctx context.Context, in *GetAppListV2Request, opts ...grpc.CallOption) (*GetAppListV2Response, error)
-	// GetStoreAppList 使用 IStoreService/GetAppList/v1 分页获取应用列表，
-	// 服务端自动翻页直到取完所有数据。
+	// GetStoreAppList 使用 IStoreService/GetAppList/v1 获取单页应用列表，
+	// 调用方用 last_appid/have_more_results 循环翻页取全量。
+	// 服务端单页上限 5k（请求更大值会被钳制），避免大包超 gRPC 消息限制。
 	GetStoreAppList(ctx context.Context, in *GetStoreAppListRequest, opts ...grpc.CallOption) (*GetStoreAppListResponse, error)
 }
 
@@ -74,8 +75,9 @@ func (c *steamAllGamesServiceClient) GetStoreAppList(ctx context.Context, in *Ge
 type SteamAllGamesServiceServer interface {
 	// GetAppListV2 使用 ISteamApps/GetAppList/v2 获取全部应用列表（一次性返回）。
 	GetAppListV2(context.Context, *GetAppListV2Request) (*GetAppListV2Response, error)
-	// GetStoreAppList 使用 IStoreService/GetAppList/v1 分页获取应用列表，
-	// 服务端自动翻页直到取完所有数据。
+	// GetStoreAppList 使用 IStoreService/GetAppList/v1 获取单页应用列表，
+	// 调用方用 last_appid/have_more_results 循环翻页取全量。
+	// 服务端单页上限 5k（请求更大值会被钳制），避免大包超 gRPC 消息限制。
 	GetStoreAppList(context.Context, *GetStoreAppListRequest) (*GetStoreAppListResponse, error)
 	mustEmbedUnimplementedSteamAllGamesServiceServer()
 }

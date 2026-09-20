@@ -89,11 +89,10 @@ type GetOnlinePlayersRequest struct {
 	// 游戏的 Steam AppID。
 	AppId int32 `protobuf:"varint,1,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// 可选数据源，枚举值：
-	//   - `web_api` - Steam Web API
-	//   - `steam_community_html` - Steam 社区 HTML（走负载均衡 URL）
-	//   - `local_request_steam_community_html_with_proxy` - 本地代理请求社区 HTML
-	//   - `forward_request_remote_server` - 转发请求到远程服务器
-	//
+	//   * `web_api` - Steam Web API
+	//   * `steam_community_html` - Steam 社区 HTML（走负载均衡 URL）
+	//   * `local_request_steam_community_html_with_proxy` - 本地代理请求社区 HTML
+	//   * `forward_request_remote_server` - 转发请求到远程服务器
 	// 为空时由服务端按内置策略选择。
 	Source        GetOnlinePlayersSource `protobuf:"varint,2,opt,name=source,proto3,enum=steamonline.v1.GetOnlinePlayersSource" json:"source,omitempty"`
 	unknownFields protoimpl.UnknownFields

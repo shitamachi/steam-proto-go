@@ -9,6 +9,7 @@ package v1
 import (
 	context "context"
 	http "github.com/go-kratos/kratos/v3/transport/http"
+	steamhttpbinding "github.com/shitamachi/steam-proto-go/internal/httpbinding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -131,7 +132,7 @@ func NewSteamDBServiceHTTPClient(client *http.Client) SteamDBServiceHTTPClient {
 func (c *SteamDBServiceHTTPClientImpl) EnrichAppIDs(ctx context.Context, in *EnrichAppIDsRequest, opts ...http.CallOption) (*EnrichAppIDsReply, error) {
 	var out EnrichAppIDsReply
 	pattern := "/v1/steamdb/enrich"
-	path := http.BuildPath(pattern, in, http.WithQueryParams())
+	path := steamhttpbinding.BuildPath(pattern, in, http.WithQueryParams())
 	opts = append([]http.CallOption{
 		http.Accept("application/protojson"),
 		http.Operation(OperationSteamDBServiceEnrichAppIDs),
@@ -150,7 +151,7 @@ func (c *SteamDBServiceHTTPClientImpl) EnrichAppIDs(ctx context.Context, in *Enr
 func (c *SteamDBServiceHTTPClientImpl) GetAppPage(ctx context.Context, in *GetAppPageRequest, opts ...http.CallOption) (*GetAppPageReply, error) {
 	var out GetAppPageReply
 	pattern := "/v1/steamdb/apps/{app_id}"
-	path := http.BuildPath(pattern, in, http.WithQueryParams())
+	path := steamhttpbinding.BuildPath(pattern, in, http.WithQueryParams())
 	opts = append([]http.CallOption{
 		http.Accept("application/protojson"),
 		http.Operation(OperationSteamDBServiceGetAppPage),
@@ -167,7 +168,7 @@ func (c *SteamDBServiceHTTPClientImpl) GetAppPage(ctx context.Context, in *GetAp
 func (c *SteamDBServiceHTTPClientImpl) GetListPage(ctx context.Context, in *GetListPageRequest, opts ...http.CallOption) (*GetListPageReply, error) {
 	var out GetListPageReply
 	pattern := "/v1/steamdb/lists"
-	path := http.BuildPath(pattern, in, http.WithQueryParams())
+	path := steamhttpbinding.BuildPath(pattern, in, http.WithQueryParams())
 	opts = append([]http.CallOption{
 		http.Accept("application/protojson"),
 		http.Operation(OperationSteamDBServiceGetListPage),
