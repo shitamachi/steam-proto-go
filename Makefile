@@ -11,4 +11,4 @@ integration-test:
 	@set -eu; work=$$(mktemp -d); trap 'rm -rf "$$work"' EXIT; \
 		export GOWORK="$$work/go.work"; \
 		go work init . ../steam-api; \
-		go -C ../steam-api test -race -tags sdk_workspace ./internal/server
+		go -C ../steam-api test -race ./internal/server

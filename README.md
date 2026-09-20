@@ -23,4 +23,4 @@ make integration-test
 
 SDK 测试直接调用生成客户端，检查在线人数、评论、SteamDB、Todo 请求的真实 URL、query 编码及请求体分离。`integration-test` 需要同级 `steam-api`，自动创建临时 Go workspace，将本地 SDK 连到真实 API service/usecase，验证 0、160 和 NOT_FOUND 及实际来源；退出后删除 workspace，不修改模块依赖。
 
-`steam-api` 当前仍引用已发布的 SDK v0.2.2。修复提交后还需发布新版 SDK 并升级使用 HTTP 客户端的项目，旧版本不会自动获得修复。API 中暂以 `sdk_workspace` build tag 保存本地新版 SDK 的集成回归，发布并升级依赖后可移除此隔离。
+路径修复已发布为 `v0.2.3`，`steam-api` 与 `steam-tasks` 均升级到该版本。旧版调用方不会自动获得修复，仍需显式升级依赖。
