@@ -22,6 +22,67 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// GetAppDetailsSource 应用详情抓取数据源。
+type GetAppDetailsSource int32
+
+const (
+	// 未指定数据源，由服务端按内置策略选择。
+	GetAppDetailsSource_GET_APP_DETAILS_SOURCE_UNSPECIFIED GetAppDetailsSource = 0
+	// 直连 Steam Store api/appdetails。
+	GetAppDetailsSource_GET_APP_DETAILS_SOURCE_STORE_API GetAppDetailsSource = 1
+	// 经集群代理直抓 Steam Store api/appdetails。
+	GetAppDetailsSource_GET_APP_DETAILS_SOURCE_STORE_API_WITH_PROXY GetAppDetailsSource = 2
+	// 负载均衡镜像源（/api/steam/apps/{appid}/details，单 app）。
+	GetAppDetailsSource_GET_APP_DETAILS_SOURCE_LOAD_BALANCE GetAppDetailsSource = 3
+	// 经远程转发服务器请求 Steam Store api/appdetails。
+	GetAppDetailsSource_GET_APP_DETAILS_SOURCE_FORWARD_REQUEST_REMOTE_SERVER GetAppDetailsSource = 4
+)
+
+// Enum value maps for GetAppDetailsSource.
+var (
+	GetAppDetailsSource_name = map[int32]string{
+		0: "GET_APP_DETAILS_SOURCE_UNSPECIFIED",
+		1: "GET_APP_DETAILS_SOURCE_STORE_API",
+		2: "GET_APP_DETAILS_SOURCE_STORE_API_WITH_PROXY",
+		3: "GET_APP_DETAILS_SOURCE_LOAD_BALANCE",
+		4: "GET_APP_DETAILS_SOURCE_FORWARD_REQUEST_REMOTE_SERVER",
+	}
+	GetAppDetailsSource_value = map[string]int32{
+		"GET_APP_DETAILS_SOURCE_UNSPECIFIED":                   0,
+		"GET_APP_DETAILS_SOURCE_STORE_API":                     1,
+		"GET_APP_DETAILS_SOURCE_STORE_API_WITH_PROXY":          2,
+		"GET_APP_DETAILS_SOURCE_LOAD_BALANCE":                  3,
+		"GET_APP_DETAILS_SOURCE_FORWARD_REQUEST_REMOTE_SERVER": 4,
+	}
+)
+
+func (x GetAppDetailsSource) Enum() *GetAppDetailsSource {
+	p := new(GetAppDetailsSource)
+	*p = x
+	return p
+}
+
+func (x GetAppDetailsSource) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (GetAppDetailsSource) Descriptor() protoreflect.EnumDescriptor {
+	return file_steamdetail_v1_steamdetail_proto_enumTypes[0].Descriptor()
+}
+
+func (GetAppDetailsSource) Type() protoreflect.EnumType {
+	return &file_steamdetail_v1_steamdetail_proto_enumTypes[0]
+}
+
+func (x GetAppDetailsSource) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use GetAppDetailsSource.Descriptor instead.
+func (GetAppDetailsSource) EnumDescriptor() ([]byte, []int) {
+	return file_steamdetail_v1_steamdetail_proto_rawDescGZIP(), []int{0}
+}
+
 // GetAppDetailsRequest 是 SteamDetailService.GetAppDetails 的输入。
 type GetAppDetailsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -35,8 +96,15 @@ type GetAppDetailsRequest struct {
 	Filters []string `protobuf:"bytes,4,rep,name=filters,proto3" json:"filters,omitempty"`
 	// 是否不使用 price_overview 过滤（为 true 时 filters 参数生效）。
 	NoPriceOverview bool `protobuf:"varint,5,opt,name=no_price_overview,json=noPriceOverview,proto3" json:"no_price_overview,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	// 可选数据源，枚举值：
+	//   * `store_api` - 直连 Steam Store api/appdetails
+	//   * `store_api_with_proxy` - 经集群代理直抓 Store api/appdetails
+	//   * `load_balance` - 负载均衡镜像源（单 app 逐个抓取后合并）
+	//   * `forward_request_remote_server` - 经远程转发服务器抓取
+	// 为空时由服务端按内置策略选择。
+	Source        GetAppDetailsSource `protobuf:"varint,6,opt,name=source,proto3,enum=steamdetail.v1.GetAppDetailsSource" json:"source,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetAppDetailsRequest) Reset() {
@@ -104,13 +172,22 @@ func (x *GetAppDetailsRequest) GetNoPriceOverview() bool {
 	return false
 }
 
+func (x *GetAppDetailsRequest) GetSource() GetAppDetailsSource {
+	if x != nil {
+		return x.Source
+	}
+	return GetAppDetailsSource_GET_APP_DETAILS_SOURCE_UNSPECIFIED
+}
+
 // AppDetails 是一次应用详情查询结果。
 type AppDetails struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 查询的应用 ID 列表。
 	AppIds []int32 `protobuf:"varint,1,rep,packed,name=app_ids,json=appIds,proto3" json:"app_ids,omitempty"`
-	// api/appdetails 接口返回的原始 JSON 响应体。
-	RawJson       []byte `protobuf:"bytes,2,opt,name=raw_json,json=rawJson,proto3" json:"raw_json,omitempty"`
+	// api/appdetails 接口返回的原始 JSON 响应体（以 appid 为 key 的 map）。
+	RawJson []byte `protobuf:"bytes,2,opt,name=raw_json,json=rawJson,proto3" json:"raw_json,omitempty"`
+	// 实际使用的数据源，取值见 GetAppDetailsRequest.source。
+	Source        GetAppDetailsSource `protobuf:"varint,3,opt,name=source,proto3,enum=steamdetail.v1.GetAppDetailsSource" json:"source,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -159,21 +236,36 @@ func (x *AppDetails) GetRawJson() []byte {
 	return nil
 }
 
+func (x *AppDetails) GetSource() GetAppDetailsSource {
+	if x != nil {
+		return x.Source
+	}
+	return GetAppDetailsSource_GET_APP_DETAILS_SOURCE_UNSPECIFIED
+}
+
 var File_steamdetail_v1_steamdetail_proto protoreflect.FileDescriptor
 
 const file_steamdetail_v1_steamdetail_proto_rawDesc = "" +
 	"\n" +
-	" steamdetail/v1/steamdetail.proto\x12\x0esteamdetail.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\"\xb2\x01\n" +
+	" steamdetail/v1/steamdetail.proto\x12\x0esteamdetail.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\"\xef\x01\n" +
 	"\x14GetAppDetailsRequest\x12\x1c\n" +
 	"\aapp_ids\x18\x01 \x03(\x05B\x03\xe0A\x02R\x06appIds\x12\x1a\n" +
 	"\blanguage\x18\x02 \x01(\tR\blanguage\x12\x1a\n" +
 	"\bcurrency\x18\x03 \x01(\tR\bcurrency\x12\x18\n" +
 	"\afilters\x18\x04 \x03(\tR\afilters\x12*\n" +
-	"\x11no_price_overview\x18\x05 \x01(\bR\x0fnoPriceOverview\"@\n" +
+	"\x11no_price_overview\x18\x05 \x01(\bR\x0fnoPriceOverview\x12;\n" +
+	"\x06source\x18\x06 \x01(\x0e2#.steamdetail.v1.GetAppDetailsSourceR\x06source\"}\n" +
 	"\n" +
 	"AppDetails\x12\x17\n" +
 	"\aapp_ids\x18\x01 \x03(\x05R\x06appIds\x12\x19\n" +
-	"\braw_json\x18\x02 \x01(\fR\arawJson2\x8b\x01\n" +
+	"\braw_json\x18\x02 \x01(\fR\arawJson\x12;\n" +
+	"\x06source\x18\x03 \x01(\x0e2#.steamdetail.v1.GetAppDetailsSourceR\x06source*\xf7\x01\n" +
+	"\x13GetAppDetailsSource\x12&\n" +
+	"\"GET_APP_DETAILS_SOURCE_UNSPECIFIED\x10\x00\x12$\n" +
+	" GET_APP_DETAILS_SOURCE_STORE_API\x10\x01\x12/\n" +
+	"+GET_APP_DETAILS_SOURCE_STORE_API_WITH_PROXY\x10\x02\x12'\n" +
+	"#GET_APP_DETAILS_SOURCE_LOAD_BALANCE\x10\x03\x128\n" +
+	"4GET_APP_DETAILS_SOURCE_FORWARD_REQUEST_REMOTE_SERVER\x10\x042\x8b\x01\n" +
 	"\x12SteamDetailService\x12u\n" +
 	"\rGetAppDetails\x12$.steamdetail.v1.GetAppDetailsRequest\x1a\x1a.steamdetail.v1.AppDetails\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/v1/steamdetail/appdetailsB`\n" +
 	"\x0esteamdetail.v1B\x10SteamDetailProtoP\x01Z:github.com/shitamachi/steam-proto-go/api/steamdetail/v1;v1b\x06proto3"
@@ -190,19 +282,23 @@ func file_steamdetail_v1_steamdetail_proto_rawDescGZIP() []byte {
 	return file_steamdetail_v1_steamdetail_proto_rawDescData
 }
 
+var file_steamdetail_v1_steamdetail_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_steamdetail_v1_steamdetail_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_steamdetail_v1_steamdetail_proto_goTypes = []any{
-	(*GetAppDetailsRequest)(nil), // 0: steamdetail.v1.GetAppDetailsRequest
-	(*AppDetails)(nil),           // 1: steamdetail.v1.AppDetails
+	(GetAppDetailsSource)(0),     // 0: steamdetail.v1.GetAppDetailsSource
+	(*GetAppDetailsRequest)(nil), // 1: steamdetail.v1.GetAppDetailsRequest
+	(*AppDetails)(nil),           // 2: steamdetail.v1.AppDetails
 }
 var file_steamdetail_v1_steamdetail_proto_depIdxs = []int32{
-	0, // 0: steamdetail.v1.SteamDetailService.GetAppDetails:input_type -> steamdetail.v1.GetAppDetailsRequest
-	1, // 1: steamdetail.v1.SteamDetailService.GetAppDetails:output_type -> steamdetail.v1.AppDetails
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0, // 0: steamdetail.v1.GetAppDetailsRequest.source:type_name -> steamdetail.v1.GetAppDetailsSource
+	0, // 1: steamdetail.v1.AppDetails.source:type_name -> steamdetail.v1.GetAppDetailsSource
+	1, // 2: steamdetail.v1.SteamDetailService.GetAppDetails:input_type -> steamdetail.v1.GetAppDetailsRequest
+	2, // 3: steamdetail.v1.SteamDetailService.GetAppDetails:output_type -> steamdetail.v1.AppDetails
+	3, // [3:4] is the sub-list for method output_type
+	2, // [2:3] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_steamdetail_v1_steamdetail_proto_init() }
@@ -215,13 +311,14 @@ func file_steamdetail_v1_steamdetail_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_steamdetail_v1_steamdetail_proto_rawDesc), len(file_steamdetail_v1_steamdetail_proto_rawDesc)),
-			NumEnums:      0,
+			NumEnums:      1,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_steamdetail_v1_steamdetail_proto_goTypes,
 		DependencyIndexes: file_steamdetail_v1_steamdetail_proto_depIdxs,
+		EnumInfos:         file_steamdetail_v1_steamdetail_proto_enumTypes,
 		MessageInfos:      file_steamdetail_v1_steamdetail_proto_msgTypes,
 	}.Build()
 	File_steamdetail_v1_steamdetail_proto = out.File

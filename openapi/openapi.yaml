@@ -258,6 +258,18 @@ paths:
                   description: 是否不使用 price_overview 过滤（为 true 时 filters 参数生效）。
                   schema:
                     type: boolean
+                - name: source
+                  in: query
+                  description: |-
+                    可选数据源，枚举值：
+                       * `store_api` - 直连 Steam Store api/appdetails
+                       * `store_api_with_proxy` - 经集群代理直抓 Store api/appdetails
+                       * `load_balance` - 负载均衡镜像源（单 app 逐个抓取后合并）
+                       * `forward_request_remote_server` - 经远程转发服务器抓取
+                     为空时由服务端按内置策略选择。
+                  schema:
+                    type: integer
+                    format: enum
             responses:
                 "200":
                     description: OK
@@ -700,8 +712,12 @@ components:
                     description: 查询的应用 ID 列表。
                 rawJson:
                     type: string
-                    description: api/appdetails 接口返回的原始 JSON 响应体。
+                    description: api/appdetails 接口返回的原始 JSON 响应体（以 appid 为 key 的 map）。
                     format: bytes
+                source:
+                    type: integer
+                    description: 实际使用的数据源，取值见 GetAppDetailsRequest.source。
+                    format: enum
             description: AppDetails 是一次应用详情查询结果。
         steamonline.v1.OnlinePlayers:
             type: object
