@@ -243,6 +243,118 @@ func (x *AppDetails) GetSource() GetAppDetailsSource {
 	return GetAppDetailsSource_GET_APP_DETAILS_SOURCE_UNSPECIFIED
 }
 
+type GetStorePageHTMLRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AppId         int32                  `protobuf:"varint,1,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
+	Language      string                 `protobuf:"bytes,2,opt,name=language,proto3" json:"language,omitempty"`
+	Country       string                 `protobuf:"bytes,3,opt,name=country,proto3" json:"country,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetStorePageHTMLRequest) Reset() {
+	*x = GetStorePageHTMLRequest{}
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetStorePageHTMLRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetStorePageHTMLRequest) ProtoMessage() {}
+
+func (x *GetStorePageHTMLRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetStorePageHTMLRequest.ProtoReflect.Descriptor instead.
+func (*GetStorePageHTMLRequest) Descriptor() ([]byte, []int) {
+	return file_steamdetail_v1_steamdetail_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *GetStorePageHTMLRequest) GetAppId() int32 {
+	if x != nil {
+		return x.AppId
+	}
+	return 0
+}
+
+func (x *GetStorePageHTMLRequest) GetLanguage() string {
+	if x != nil {
+		return x.Language
+	}
+	return ""
+}
+
+func (x *GetStorePageHTMLRequest) GetCountry() string {
+	if x != nil {
+		return x.Country
+	}
+	return ""
+}
+
+type StorePageHTML struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RawHtml       []byte                 `protobuf:"bytes,1,opt,name=raw_html,json=rawHtml,proto3" json:"raw_html,omitempty"`
+	FinalUrl      string                 `protobuf:"bytes,2,opt,name=final_url,json=finalUrl,proto3" json:"final_url,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *StorePageHTML) Reset() {
+	*x = StorePageHTML{}
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *StorePageHTML) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StorePageHTML) ProtoMessage() {}
+
+func (x *StorePageHTML) ProtoReflect() protoreflect.Message {
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StorePageHTML.ProtoReflect.Descriptor instead.
+func (*StorePageHTML) Descriptor() ([]byte, []int) {
+	return file_steamdetail_v1_steamdetail_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *StorePageHTML) GetRawHtml() []byte {
+	if x != nil {
+		return x.RawHtml
+	}
+	return nil
+}
+
+func (x *StorePageHTML) GetFinalUrl() string {
+	if x != nil {
+		return x.FinalUrl
+	}
+	return ""
+}
+
 var File_steamdetail_v1_steamdetail_proto protoreflect.FileDescriptor
 
 const file_steamdetail_v1_steamdetail_proto_rawDesc = "" +
@@ -259,14 +371,22 @@ const file_steamdetail_v1_steamdetail_proto_rawDesc = "" +
 	"AppDetails\x12\x17\n" +
 	"\aapp_ids\x18\x01 \x03(\x05R\x06appIds\x12\x19\n" +
 	"\braw_json\x18\x02 \x01(\fR\arawJson\x12;\n" +
-	"\x06source\x18\x03 \x01(\x0e2#.steamdetail.v1.GetAppDetailsSourceR\x06source*\xf7\x01\n" +
+	"\x06source\x18\x03 \x01(\x0e2#.steamdetail.v1.GetAppDetailsSourceR\x06source\"k\n" +
+	"\x17GetStorePageHTMLRequest\x12\x1a\n" +
+	"\x06app_id\x18\x01 \x01(\x05B\x03\xe0A\x02R\x05appId\x12\x1a\n" +
+	"\blanguage\x18\x02 \x01(\tR\blanguage\x12\x18\n" +
+	"\acountry\x18\x03 \x01(\tR\acountry\"G\n" +
+	"\rStorePageHTML\x12\x19\n" +
+	"\braw_html\x18\x01 \x01(\fR\arawHtml\x12\x1b\n" +
+	"\tfinal_url\x18\x02 \x01(\tR\bfinalUrl*\xf7\x01\n" +
 	"\x13GetAppDetailsSource\x12&\n" +
 	"\"GET_APP_DETAILS_SOURCE_UNSPECIFIED\x10\x00\x12$\n" +
 	" GET_APP_DETAILS_SOURCE_STORE_API\x10\x01\x12/\n" +
 	"+GET_APP_DETAILS_SOURCE_STORE_API_WITH_PROXY\x10\x02\x12'\n" +
 	"#GET_APP_DETAILS_SOURCE_LOAD_BALANCE\x10\x03\x128\n" +
-	"4GET_APP_DETAILS_SOURCE_FORWARD_REQUEST_REMOTE_SERVER\x10\x042\x8b\x01\n" +
-	"\x12SteamDetailService\x12u\n" +
+	"4GET_APP_DETAILS_SOURCE_FORWARD_REQUEST_REMOTE_SERVER\x10\x042\x8b\x02\n" +
+	"\x12SteamDetailService\x12~\n" +
+	"\x10GetStorePageHTML\x12'.steamdetail.v1.GetStorePageHTMLRequest\x1a\x1d.steamdetail.v1.StorePageHTML\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/v1/steamdetail/store-html\x12u\n" +
 	"\rGetAppDetails\x12$.steamdetail.v1.GetAppDetailsRequest\x1a\x1a.steamdetail.v1.AppDetails\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/v1/steamdetail/appdetailsB`\n" +
 	"\x0esteamdetail.v1B\x10SteamDetailProtoP\x01Z:github.com/shitamachi/steam-proto-go/api/steamdetail/v1;v1b\x06proto3"
 
@@ -283,19 +403,23 @@ func file_steamdetail_v1_steamdetail_proto_rawDescGZIP() []byte {
 }
 
 var file_steamdetail_v1_steamdetail_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_steamdetail_v1_steamdetail_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_steamdetail_v1_steamdetail_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_steamdetail_v1_steamdetail_proto_goTypes = []any{
-	(GetAppDetailsSource)(0),     // 0: steamdetail.v1.GetAppDetailsSource
-	(*GetAppDetailsRequest)(nil), // 1: steamdetail.v1.GetAppDetailsRequest
-	(*AppDetails)(nil),           // 2: steamdetail.v1.AppDetails
+	(GetAppDetailsSource)(0),        // 0: steamdetail.v1.GetAppDetailsSource
+	(*GetAppDetailsRequest)(nil),    // 1: steamdetail.v1.GetAppDetailsRequest
+	(*AppDetails)(nil),              // 2: steamdetail.v1.AppDetails
+	(*GetStorePageHTMLRequest)(nil), // 3: steamdetail.v1.GetStorePageHTMLRequest
+	(*StorePageHTML)(nil),           // 4: steamdetail.v1.StorePageHTML
 }
 var file_steamdetail_v1_steamdetail_proto_depIdxs = []int32{
 	0, // 0: steamdetail.v1.GetAppDetailsRequest.source:type_name -> steamdetail.v1.GetAppDetailsSource
 	0, // 1: steamdetail.v1.AppDetails.source:type_name -> steamdetail.v1.GetAppDetailsSource
-	1, // 2: steamdetail.v1.SteamDetailService.GetAppDetails:input_type -> steamdetail.v1.GetAppDetailsRequest
-	2, // 3: steamdetail.v1.SteamDetailService.GetAppDetails:output_type -> steamdetail.v1.AppDetails
-	3, // [3:4] is the sub-list for method output_type
-	2, // [2:3] is the sub-list for method input_type
+	3, // 2: steamdetail.v1.SteamDetailService.GetStorePageHTML:input_type -> steamdetail.v1.GetStorePageHTMLRequest
+	1, // 3: steamdetail.v1.SteamDetailService.GetAppDetails:input_type -> steamdetail.v1.GetAppDetailsRequest
+	4, // 4: steamdetail.v1.SteamDetailService.GetStorePageHTML:output_type -> steamdetail.v1.StorePageHTML
+	2, // 5: steamdetail.v1.SteamDetailService.GetAppDetails:output_type -> steamdetail.v1.AppDetails
+	4, // [4:6] is the sub-list for method output_type
+	2, // [2:4] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
 	2, // [2:2] is the sub-list for extension extendee
 	0, // [0:2] is the sub-list for field type_name
@@ -312,7 +436,7 @@ func file_steamdetail_v1_steamdetail_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_steamdetail_v1_steamdetail_proto_rawDesc), len(file_steamdetail_v1_steamdetail_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   2,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

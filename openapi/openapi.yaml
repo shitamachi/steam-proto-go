@@ -277,6 +277,33 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/steamdetail.v1.AppDetails'
+    /v1/steamdetail/store-html:
+        get:
+            tags:
+                - SteamDetailService
+            description: Fixed-purpose Store HTML collection; authentication stays inside steam-api.
+            operationId: SteamDetailService_GetStorePageHTML
+            parameters:
+                - name: appId
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: language
+                  in: query
+                  schema:
+                    type: string
+                - name: country
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/steamdetail.v1.StorePageHTML'
     /v1/steamonline/players/{appId}:
         get:
             tags:
@@ -719,6 +746,14 @@ components:
                     description: 实际使用的数据源，取值见 GetAppDetailsRequest.source。
                     format: enum
             description: AppDetails 是一次应用详情查询结果。
+        steamdetail.v1.StorePageHTML:
+            type: object
+            properties:
+                rawHtml:
+                    type: string
+                    format: bytes
+                finalUrl:
+                    type: string
         steamonline.v1.OnlinePlayers:
             type: object
             properties:

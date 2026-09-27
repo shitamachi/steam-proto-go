@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	SteamDetailService_GetAppDetails_FullMethodName = "/steamdetail.v1.SteamDetailService/GetAppDetails"
+	SteamDetailService_GetStorePageHTML_FullMethodName = "/steamdetail.v1.SteamDetailService/GetStorePageHTML"
+	SteamDetailService_GetAppDetails_FullMethodName    = "/steamdetail.v1.SteamDetailService/GetAppDetails"
 )
 
 // SteamDetailServiceClient is the client API for SteamDetailService service.
@@ -29,6 +30,8 @@ const (
 // SteamDetailService 提供 Steam 应用详情抓取能力。
 // 对应 steam-tasks 中 handlers/steam_detail 的 SteamAppDetailAPI 客户端逻辑。
 type SteamDetailServiceClient interface {
+	// Fixed-purpose Store HTML collection; authentication stays inside steam-api.
+	GetStorePageHTML(ctx context.Context, in *GetStorePageHTMLRequest, opts ...grpc.CallOption) (*StorePageHTML, error)
 	// GetAppDetails 获取指定应用（appids）的详情数据。
 	// 返回的 raw_json 为 api/appdetails 接口的原始 JSON 响应体
 	// （以 appid 为 key 的应用详情 map），解析与落库由调用方完成。
@@ -41,6 +44,16 @@ type steamDetailServiceClient struct {
 
 func NewSteamDetailServiceClient(cc grpc.ClientConnInterface) SteamDetailServiceClient {
 	return &steamDetailServiceClient{cc}
+}
+
+func (c *steamDetailServiceClient) GetStorePageHTML(ctx context.Context, in *GetStorePageHTMLRequest, opts ...grpc.CallOption) (*StorePageHTML, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(StorePageHTML)
+	err := c.cc.Invoke(ctx, SteamDetailService_GetStorePageHTML_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *steamDetailServiceClient) GetAppDetails(ctx context.Context, in *GetAppDetailsRequest, opts ...grpc.CallOption) (*AppDetails, error) {
@@ -60,6 +73,8 @@ func (c *steamDetailServiceClient) GetAppDetails(ctx context.Context, in *GetApp
 // SteamDetailService 提供 Steam 应用详情抓取能力。
 // 对应 steam-tasks 中 handlers/steam_detail 的 SteamAppDetailAPI 客户端逻辑。
 type SteamDetailServiceServer interface {
+	// Fixed-purpose Store HTML collection; authentication stays inside steam-api.
+	GetStorePageHTML(context.Context, *GetStorePageHTMLRequest) (*StorePageHTML, error)
 	// GetAppDetails 获取指定应用（appids）的详情数据。
 	// 返回的 raw_json 为 api/appdetails 接口的原始 JSON 响应体
 	// （以 appid 为 key 的应用详情 map），解析与落库由调用方完成。
@@ -74,6 +89,9 @@ type SteamDetailServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedSteamDetailServiceServer struct{}
 
+func (UnimplementedSteamDetailServiceServer) GetStorePageHTML(context.Context, *GetStorePageHTMLRequest) (*StorePageHTML, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetStorePageHTML not implemented")
+}
 func (UnimplementedSteamDetailServiceServer) GetAppDetails(context.Context, *GetAppDetailsRequest) (*AppDetails, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAppDetails not implemented")
 }
@@ -96,6 +114,24 @@ func RegisterSteamDetailServiceServer(s grpc.ServiceRegistrar, srv SteamDetailSe
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&SteamDetailService_ServiceDesc, srv)
+}
+
+func _SteamDetailService_GetStorePageHTML_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetStorePageHTMLRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SteamDetailServiceServer).GetStorePageHTML(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SteamDetailService_GetStorePageHTML_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SteamDetailServiceServer).GetStorePageHTML(ctx, req.(*GetStorePageHTMLRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _SteamDetailService_GetAppDetails_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -123,6 +159,10 @@ var SteamDetailService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "steamdetail.v1.SteamDetailService",
 	HandlerType: (*SteamDetailServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetStorePageHTML",
+			Handler:    _SteamDetailService_GetStorePageHTML_Handler,
+		},
 		{
 			MethodName: "GetAppDetails",
 			Handler:    _SteamDetailService_GetAppDetails_Handler,

@@ -19,17 +19,40 @@ var _ = new(context.Context)
 const _ = http.SupportPackageIsVersion3
 
 const OperationSteamDetailServiceGetAppDetails = "/steamdetail.v1.SteamDetailService/GetAppDetails"
+const OperationSteamDetailServiceGetStorePageHTML = "/steamdetail.v1.SteamDetailService/GetStorePageHTML"
 
 type SteamDetailServiceHTTPServer interface {
 	// GetAppDetails GetAppDetails 获取指定应用（appids）的详情数据。
 	// 返回的 raw_json 为 api/appdetails 接口的原始 JSON 响应体
 	// （以 appid 为 key 的应用详情 map），解析与落库由调用方完成。
 	GetAppDetails(context.Context, *GetAppDetailsRequest) (*AppDetails, error)
+	// GetStorePageHTML Fixed-purpose Store HTML collection; authentication stays inside steam-api.
+	GetStorePageHTML(context.Context, *GetStorePageHTMLRequest) (*StorePageHTML, error)
 }
 
 func RegisterSteamDetailServiceHTTPServer(s *http.Server, srv SteamDetailServiceHTTPServer) {
 	r := s.Route("/")
+	r.Handle("GET", "/v1/steamdetail/store-html", _SteamDetailService_GetStorePageHTML0_HTTP_Handler(srv))
 	r.Handle("GET", "/v1/steamdetail/appdetails", _SteamDetailService_GetAppDetails0_HTTP_Handler(srv))
+}
+
+func _SteamDetailService_GetStorePageHTML0_HTTP_Handler(srv SteamDetailServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetStorePageHTMLRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSteamDetailServiceGetStorePageHTML)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetStorePageHTML(ctx, req.(*GetStorePageHTMLRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*StorePageHTML)
+		return ctx.Result(200, reply)
+	}
 }
 
 func _SteamDetailService_GetAppDetails0_HTTP_Handler(srv SteamDetailServiceHTTPServer) func(ctx http.Context) error {
@@ -56,6 +79,8 @@ type SteamDetailServiceHTTPClient interface {
 	// 返回的 raw_json 为 api/appdetails 接口的原始 JSON 响应体
 	// （以 appid 为 key 的应用详情 map），解析与落库由调用方完成。
 	GetAppDetails(ctx context.Context, req *GetAppDetailsRequest, opts ...http.CallOption) (rsp *AppDetails, err error)
+	// GetStorePageHTML Fixed-purpose Store HTML collection; authentication stays inside steam-api.
+	GetStorePageHTML(ctx context.Context, req *GetStorePageHTMLRequest, opts ...http.CallOption) (rsp *StorePageHTML, err error)
 }
 
 type SteamDetailServiceHTTPClientImpl struct {
@@ -76,6 +101,23 @@ func (c *SteamDetailServiceHTTPClientImpl) GetAppDetails(ctx context.Context, in
 	opts = append([]http.CallOption{
 		http.Accept("application/protojson"),
 		http.Operation(OperationSteamDetailServiceGetAppDetails),
+		http.PathTemplate(pattern),
+	}, opts...)
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// GetStorePageHTML Fixed-purpose Store HTML collection; authentication stays inside steam-api.
+func (c *SteamDetailServiceHTTPClientImpl) GetStorePageHTML(ctx context.Context, in *GetStorePageHTMLRequest, opts ...http.CallOption) (*StorePageHTML, error) {
+	var out StorePageHTML
+	pattern := "/v1/steamdetail/store-html"
+	path := steamhttpbinding.BuildPath(pattern, in, http.WithQueryParams())
+	opts = append([]http.CallOption{
+		http.Accept("application/protojson"),
+		http.Operation(OperationSteamDetailServiceGetStorePageHTML),
 		http.PathTemplate(pattern),
 	}, opts...)
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
