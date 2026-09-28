@@ -171,3 +171,187 @@ var SteamDetailService_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "steamdetail/v1/steamdetail.proto",
 }
+
+const (
+	SteamMetadataService_GetStoreItems_FullMethodName = "/steamdetail.v1.SteamMetadataService/GetStoreItems"
+	SteamMetadataService_GetTagList_FullMethodName    = "/steamdetail.v1.SteamMetadataService/GetTagList"
+	SteamMetadataService_GetDeckReport_FullMethodName = "/steamdetail.v1.SteamMetadataService/GetDeckReport"
+)
+
+// SteamMetadataServiceClient is the client API for SteamMetadataService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// SteamMetadataService exposes bounded first-party metadata requests to tasks.
+// Responses are compact source JSON; tasks own persistence and ETL owns projection.
+type SteamMetadataServiceClient interface {
+	GetStoreItems(ctx context.Context, in *GetStoreItemsRequest, opts ...grpc.CallOption) (*GetStoreItemsResponse, error)
+	GetTagList(ctx context.Context, in *GetTagListRequest, opts ...grpc.CallOption) (*GetTagListResponse, error)
+	GetDeckReport(ctx context.Context, in *GetDeckReportRequest, opts ...grpc.CallOption) (*GetDeckReportResponse, error)
+}
+
+type steamMetadataServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewSteamMetadataServiceClient(cc grpc.ClientConnInterface) SteamMetadataServiceClient {
+	return &steamMetadataServiceClient{cc}
+}
+
+func (c *steamMetadataServiceClient) GetStoreItems(ctx context.Context, in *GetStoreItemsRequest, opts ...grpc.CallOption) (*GetStoreItemsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetStoreItemsResponse)
+	err := c.cc.Invoke(ctx, SteamMetadataService_GetStoreItems_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *steamMetadataServiceClient) GetTagList(ctx context.Context, in *GetTagListRequest, opts ...grpc.CallOption) (*GetTagListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTagListResponse)
+	err := c.cc.Invoke(ctx, SteamMetadataService_GetTagList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *steamMetadataServiceClient) GetDeckReport(ctx context.Context, in *GetDeckReportRequest, opts ...grpc.CallOption) (*GetDeckReportResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetDeckReportResponse)
+	err := c.cc.Invoke(ctx, SteamMetadataService_GetDeckReport_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// SteamMetadataServiceServer is the server API for SteamMetadataService service.
+// All implementations must embed UnimplementedSteamMetadataServiceServer
+// for forward compatibility.
+//
+// SteamMetadataService exposes bounded first-party metadata requests to tasks.
+// Responses are compact source JSON; tasks own persistence and ETL owns projection.
+type SteamMetadataServiceServer interface {
+	GetStoreItems(context.Context, *GetStoreItemsRequest) (*GetStoreItemsResponse, error)
+	GetTagList(context.Context, *GetTagListRequest) (*GetTagListResponse, error)
+	GetDeckReport(context.Context, *GetDeckReportRequest) (*GetDeckReportResponse, error)
+	mustEmbedUnimplementedSteamMetadataServiceServer()
+}
+
+// UnimplementedSteamMetadataServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedSteamMetadataServiceServer struct{}
+
+func (UnimplementedSteamMetadataServiceServer) GetStoreItems(context.Context, *GetStoreItemsRequest) (*GetStoreItemsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetStoreItems not implemented")
+}
+func (UnimplementedSteamMetadataServiceServer) GetTagList(context.Context, *GetTagListRequest) (*GetTagListResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetTagList not implemented")
+}
+func (UnimplementedSteamMetadataServiceServer) GetDeckReport(context.Context, *GetDeckReportRequest) (*GetDeckReportResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetDeckReport not implemented")
+}
+func (UnimplementedSteamMetadataServiceServer) mustEmbedUnimplementedSteamMetadataServiceServer() {}
+func (UnimplementedSteamMetadataServiceServer) testEmbeddedByValue()                              {}
+
+// UnsafeSteamMetadataServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to SteamMetadataServiceServer will
+// result in compilation errors.
+type UnsafeSteamMetadataServiceServer interface {
+	mustEmbedUnimplementedSteamMetadataServiceServer()
+}
+
+func RegisterSteamMetadataServiceServer(s grpc.ServiceRegistrar, srv SteamMetadataServiceServer) {
+	// If the following call panics, it indicates UnimplementedSteamMetadataServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&SteamMetadataService_ServiceDesc, srv)
+}
+
+func _SteamMetadataService_GetStoreItems_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetStoreItemsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SteamMetadataServiceServer).GetStoreItems(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SteamMetadataService_GetStoreItems_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SteamMetadataServiceServer).GetStoreItems(ctx, req.(*GetStoreItemsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SteamMetadataService_GetTagList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTagListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SteamMetadataServiceServer).GetTagList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SteamMetadataService_GetTagList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SteamMetadataServiceServer).GetTagList(ctx, req.(*GetTagListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SteamMetadataService_GetDeckReport_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDeckReportRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SteamMetadataServiceServer).GetDeckReport(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SteamMetadataService_GetDeckReport_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SteamMetadataServiceServer).GetDeckReport(ctx, req.(*GetDeckReportRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// SteamMetadataService_ServiceDesc is the grpc.ServiceDesc for SteamMetadataService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var SteamMetadataService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "steamdetail.v1.SteamMetadataService",
+	HandlerType: (*SteamMetadataServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetStoreItems",
+			Handler:    _SteamMetadataService_GetStoreItems_Handler,
+		},
+		{
+			MethodName: "GetTagList",
+			Handler:    _SteamMetadataService_GetTagList_Handler,
+		},
+		{
+			MethodName: "GetDeckReport",
+			Handler:    _SteamMetadataService_GetDeckReport_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "steamdetail/v1/steamdetail.proto",
+}

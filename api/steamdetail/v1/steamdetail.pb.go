@@ -83,6 +83,326 @@ func (GetAppDetailsSource) EnumDescriptor() ([]byte, []int) {
 	return file_steamdetail_v1_steamdetail_proto_rawDescGZIP(), []int{0}
 }
 
+type GetStoreItemsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AppIds        []int32                `protobuf:"varint,1,rep,packed,name=app_ids,json=appIds,proto3" json:"app_ids,omitempty"`
+	Language      string                 `protobuf:"bytes,2,opt,name=language,proto3" json:"language,omitempty"`
+	Country       string                 `protobuf:"bytes,3,opt,name=country,proto3" json:"country,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetStoreItemsRequest) Reset() {
+	*x = GetStoreItemsRequest{}
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetStoreItemsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetStoreItemsRequest) ProtoMessage() {}
+
+func (x *GetStoreItemsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetStoreItemsRequest.ProtoReflect.Descriptor instead.
+func (*GetStoreItemsRequest) Descriptor() ([]byte, []int) {
+	return file_steamdetail_v1_steamdetail_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *GetStoreItemsRequest) GetAppIds() []int32 {
+	if x != nil {
+		return x.AppIds
+	}
+	return nil
+}
+
+func (x *GetStoreItemsRequest) GetLanguage() string {
+	if x != nil {
+		return x.Language
+	}
+	return ""
+}
+
+func (x *GetStoreItemsRequest) GetCountry() string {
+	if x != nil {
+		return x.Country
+	}
+	return ""
+}
+
+type GetStoreItemsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AppIds        []int32                `protobuf:"varint,1,rep,packed,name=app_ids,json=appIds,proto3" json:"app_ids,omitempty"`
+	Language      string                 `protobuf:"bytes,2,opt,name=language,proto3" json:"language,omitempty"`
+	Country       string                 `protobuf:"bytes,3,opt,name=country,proto3" json:"country,omitempty"`
+	RawJson       []byte                 `protobuf:"bytes,4,opt,name=raw_json,json=rawJson,proto3" json:"raw_json,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetStoreItemsResponse) Reset() {
+	*x = GetStoreItemsResponse{}
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetStoreItemsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetStoreItemsResponse) ProtoMessage() {}
+
+func (x *GetStoreItemsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetStoreItemsResponse.ProtoReflect.Descriptor instead.
+func (*GetStoreItemsResponse) Descriptor() ([]byte, []int) {
+	return file_steamdetail_v1_steamdetail_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *GetStoreItemsResponse) GetAppIds() []int32 {
+	if x != nil {
+		return x.AppIds
+	}
+	return nil
+}
+
+func (x *GetStoreItemsResponse) GetLanguage() string {
+	if x != nil {
+		return x.Language
+	}
+	return ""
+}
+
+func (x *GetStoreItemsResponse) GetCountry() string {
+	if x != nil {
+		return x.Country
+	}
+	return ""
+}
+
+func (x *GetStoreItemsResponse) GetRawJson() []byte {
+	if x != nil {
+		return x.RawJson
+	}
+	return nil
+}
+
+type GetTagListRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Language      string                 `protobuf:"bytes,1,opt,name=language,proto3" json:"language,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetTagListRequest) Reset() {
+	*x = GetTagListRequest{}
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetTagListRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTagListRequest) ProtoMessage() {}
+
+func (x *GetTagListRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTagListRequest.ProtoReflect.Descriptor instead.
+func (*GetTagListRequest) Descriptor() ([]byte, []int) {
+	return file_steamdetail_v1_steamdetail_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *GetTagListRequest) GetLanguage() string {
+	if x != nil {
+		return x.Language
+	}
+	return ""
+}
+
+type GetTagListResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Language      string                 `protobuf:"bytes,1,opt,name=language,proto3" json:"language,omitempty"`
+	RawJson       []byte                 `protobuf:"bytes,2,opt,name=raw_json,json=rawJson,proto3" json:"raw_json,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetTagListResponse) Reset() {
+	*x = GetTagListResponse{}
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetTagListResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTagListResponse) ProtoMessage() {}
+
+func (x *GetTagListResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTagListResponse.ProtoReflect.Descriptor instead.
+func (*GetTagListResponse) Descriptor() ([]byte, []int) {
+	return file_steamdetail_v1_steamdetail_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetTagListResponse) GetLanguage() string {
+	if x != nil {
+		return x.Language
+	}
+	return ""
+}
+
+func (x *GetTagListResponse) GetRawJson() []byte {
+	if x != nil {
+		return x.RawJson
+	}
+	return nil
+}
+
+type GetDeckReportRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AppId         int32                  `protobuf:"varint,1,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetDeckReportRequest) Reset() {
+	*x = GetDeckReportRequest{}
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetDeckReportRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDeckReportRequest) ProtoMessage() {}
+
+func (x *GetDeckReportRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDeckReportRequest.ProtoReflect.Descriptor instead.
+func (*GetDeckReportRequest) Descriptor() ([]byte, []int) {
+	return file_steamdetail_v1_steamdetail_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *GetDeckReportRequest) GetAppId() int32 {
+	if x != nil {
+		return x.AppId
+	}
+	return 0
+}
+
+type GetDeckReportResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AppId         int32                  `protobuf:"varint,1,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
+	RawJson       []byte                 `protobuf:"bytes,2,opt,name=raw_json,json=rawJson,proto3" json:"raw_json,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetDeckReportResponse) Reset() {
+	*x = GetDeckReportResponse{}
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetDeckReportResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDeckReportResponse) ProtoMessage() {}
+
+func (x *GetDeckReportResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDeckReportResponse.ProtoReflect.Descriptor instead.
+func (*GetDeckReportResponse) Descriptor() ([]byte, []int) {
+	return file_steamdetail_v1_steamdetail_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *GetDeckReportResponse) GetAppId() int32 {
+	if x != nil {
+		return x.AppId
+	}
+	return 0
+}
+
+func (x *GetDeckReportResponse) GetRawJson() []byte {
+	if x != nil {
+		return x.RawJson
+	}
+	return nil
+}
+
 // GetAppDetailsRequest 是 SteamDetailService.GetAppDetails 的输入。
 type GetAppDetailsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -109,7 +429,7 @@ type GetAppDetailsRequest struct {
 
 func (x *GetAppDetailsRequest) Reset() {
 	*x = GetAppDetailsRequest{}
-	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[0]
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -121,7 +441,7 @@ func (x *GetAppDetailsRequest) String() string {
 func (*GetAppDetailsRequest) ProtoMessage() {}
 
 func (x *GetAppDetailsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[0]
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -134,7 +454,7 @@ func (x *GetAppDetailsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAppDetailsRequest.ProtoReflect.Descriptor instead.
 func (*GetAppDetailsRequest) Descriptor() ([]byte, []int) {
-	return file_steamdetail_v1_steamdetail_proto_rawDescGZIP(), []int{0}
+	return file_steamdetail_v1_steamdetail_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GetAppDetailsRequest) GetAppIds() []int32 {
@@ -194,7 +514,7 @@ type AppDetails struct {
 
 func (x *AppDetails) Reset() {
 	*x = AppDetails{}
-	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[1]
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -206,7 +526,7 @@ func (x *AppDetails) String() string {
 func (*AppDetails) ProtoMessage() {}
 
 func (x *AppDetails) ProtoReflect() protoreflect.Message {
-	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[1]
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -219,7 +539,7 @@ func (x *AppDetails) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AppDetails.ProtoReflect.Descriptor instead.
 func (*AppDetails) Descriptor() ([]byte, []int) {
-	return file_steamdetail_v1_steamdetail_proto_rawDescGZIP(), []int{1}
+	return file_steamdetail_v1_steamdetail_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *AppDetails) GetAppIds() []int32 {
@@ -254,7 +574,7 @@ type GetStorePageHTMLRequest struct {
 
 func (x *GetStorePageHTMLRequest) Reset() {
 	*x = GetStorePageHTMLRequest{}
-	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[2]
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -266,7 +586,7 @@ func (x *GetStorePageHTMLRequest) String() string {
 func (*GetStorePageHTMLRequest) ProtoMessage() {}
 
 func (x *GetStorePageHTMLRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[2]
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -279,7 +599,7 @@ func (x *GetStorePageHTMLRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetStorePageHTMLRequest.ProtoReflect.Descriptor instead.
 func (*GetStorePageHTMLRequest) Descriptor() ([]byte, []int) {
-	return file_steamdetail_v1_steamdetail_proto_rawDescGZIP(), []int{2}
+	return file_steamdetail_v1_steamdetail_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *GetStorePageHTMLRequest) GetAppId() int32 {
@@ -313,7 +633,7 @@ type StorePageHTML struct {
 
 func (x *StorePageHTML) Reset() {
 	*x = StorePageHTML{}
-	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[3]
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -325,7 +645,7 @@ func (x *StorePageHTML) String() string {
 func (*StorePageHTML) ProtoMessage() {}
 
 func (x *StorePageHTML) ProtoReflect() protoreflect.Message {
-	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[3]
+	mi := &file_steamdetail_v1_steamdetail_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -338,7 +658,7 @@ func (x *StorePageHTML) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StorePageHTML.ProtoReflect.Descriptor instead.
 func (*StorePageHTML) Descriptor() ([]byte, []int) {
-	return file_steamdetail_v1_steamdetail_proto_rawDescGZIP(), []int{3}
+	return file_steamdetail_v1_steamdetail_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *StorePageHTML) GetRawHtml() []byte {
@@ -359,7 +679,26 @@ var File_steamdetail_v1_steamdetail_proto protoreflect.FileDescriptor
 
 const file_steamdetail_v1_steamdetail_proto_rawDesc = "" +
 	"\n" +
-	" steamdetail/v1/steamdetail.proto\x12\x0esteamdetail.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\"\xef\x01\n" +
+	" steamdetail/v1/steamdetail.proto\x12\x0esteamdetail.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\"j\n" +
+	"\x14GetStoreItemsRequest\x12\x1c\n" +
+	"\aapp_ids\x18\x01 \x03(\x05B\x03\xe0A\x02R\x06appIds\x12\x1a\n" +
+	"\blanguage\x18\x02 \x01(\tR\blanguage\x12\x18\n" +
+	"\acountry\x18\x03 \x01(\tR\acountry\"\x81\x01\n" +
+	"\x15GetStoreItemsResponse\x12\x17\n" +
+	"\aapp_ids\x18\x01 \x03(\x05R\x06appIds\x12\x1a\n" +
+	"\blanguage\x18\x02 \x01(\tR\blanguage\x12\x18\n" +
+	"\acountry\x18\x03 \x01(\tR\acountry\x12\x19\n" +
+	"\braw_json\x18\x04 \x01(\fR\arawJson\"/\n" +
+	"\x11GetTagListRequest\x12\x1a\n" +
+	"\blanguage\x18\x01 \x01(\tR\blanguage\"K\n" +
+	"\x12GetTagListResponse\x12\x1a\n" +
+	"\blanguage\x18\x01 \x01(\tR\blanguage\x12\x19\n" +
+	"\braw_json\x18\x02 \x01(\fR\arawJson\"2\n" +
+	"\x14GetDeckReportRequest\x12\x1a\n" +
+	"\x06app_id\x18\x01 \x01(\x05B\x03\xe0A\x02R\x05appId\"I\n" +
+	"\x15GetDeckReportResponse\x12\x15\n" +
+	"\x06app_id\x18\x01 \x01(\x05R\x05appId\x12\x19\n" +
+	"\braw_json\x18\x02 \x01(\fR\arawJson\"\xef\x01\n" +
 	"\x14GetAppDetailsRequest\x12\x1c\n" +
 	"\aapp_ids\x18\x01 \x03(\x05B\x03\xe0A\x02R\x06appIds\x12\x1a\n" +
 	"\blanguage\x18\x02 \x01(\tR\blanguage\x12\x1a\n" +
@@ -387,7 +726,12 @@ const file_steamdetail_v1_steamdetail_proto_rawDesc = "" +
 	"4GET_APP_DETAILS_SOURCE_FORWARD_REQUEST_REMOTE_SERVER\x10\x042\x8b\x02\n" +
 	"\x12SteamDetailService\x12~\n" +
 	"\x10GetStorePageHTML\x12'.steamdetail.v1.GetStorePageHTMLRequest\x1a\x1d.steamdetail.v1.StorePageHTML\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/v1/steamdetail/store-html\x12u\n" +
-	"\rGetAppDetails\x12$.steamdetail.v1.GetAppDetailsRequest\x1a\x1a.steamdetail.v1.AppDetails\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/v1/steamdetail/appdetailsB`\n" +
+	"\rGetAppDetails\x12$.steamdetail.v1.GetAppDetailsRequest\x1a\x1a.steamdetail.v1.AppDetails\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/v1/steamdetail/appdetails2\x91\x03\n" +
+	"\x14SteamMetadataService\x12\x81\x01\n" +
+	"\rGetStoreItems\x12$.steamdetail.v1.GetStoreItemsRequest\x1a%.steamdetail.v1.GetStoreItemsResponse\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/v1/steamdetail/store-items\x12q\n" +
+	"\n" +
+	"GetTagList\x12!.steamdetail.v1.GetTagListRequest\x1a\".steamdetail.v1.GetTagListResponse\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/v1/steamdetail/tags\x12\x81\x01\n" +
+	"\rGetDeckReport\x12$.steamdetail.v1.GetDeckReportRequest\x1a%.steamdetail.v1.GetDeckReportResponse\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/v1/steamdetail/deck-reportB`\n" +
 	"\x0esteamdetail.v1B\x10SteamDetailProtoP\x01Z:github.com/shitamachi/steam-proto-go/api/steamdetail/v1;v1b\x06proto3"
 
 var (
@@ -403,26 +747,38 @@ func file_steamdetail_v1_steamdetail_proto_rawDescGZIP() []byte {
 }
 
 var file_steamdetail_v1_steamdetail_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_steamdetail_v1_steamdetail_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_steamdetail_v1_steamdetail_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_steamdetail_v1_steamdetail_proto_goTypes = []any{
 	(GetAppDetailsSource)(0),        // 0: steamdetail.v1.GetAppDetailsSource
-	(*GetAppDetailsRequest)(nil),    // 1: steamdetail.v1.GetAppDetailsRequest
-	(*AppDetails)(nil),              // 2: steamdetail.v1.AppDetails
-	(*GetStorePageHTMLRequest)(nil), // 3: steamdetail.v1.GetStorePageHTMLRequest
-	(*StorePageHTML)(nil),           // 4: steamdetail.v1.StorePageHTML
+	(*GetStoreItemsRequest)(nil),    // 1: steamdetail.v1.GetStoreItemsRequest
+	(*GetStoreItemsResponse)(nil),   // 2: steamdetail.v1.GetStoreItemsResponse
+	(*GetTagListRequest)(nil),       // 3: steamdetail.v1.GetTagListRequest
+	(*GetTagListResponse)(nil),      // 4: steamdetail.v1.GetTagListResponse
+	(*GetDeckReportRequest)(nil),    // 5: steamdetail.v1.GetDeckReportRequest
+	(*GetDeckReportResponse)(nil),   // 6: steamdetail.v1.GetDeckReportResponse
+	(*GetAppDetailsRequest)(nil),    // 7: steamdetail.v1.GetAppDetailsRequest
+	(*AppDetails)(nil),              // 8: steamdetail.v1.AppDetails
+	(*GetStorePageHTMLRequest)(nil), // 9: steamdetail.v1.GetStorePageHTMLRequest
+	(*StorePageHTML)(nil),           // 10: steamdetail.v1.StorePageHTML
 }
 var file_steamdetail_v1_steamdetail_proto_depIdxs = []int32{
-	0, // 0: steamdetail.v1.GetAppDetailsRequest.source:type_name -> steamdetail.v1.GetAppDetailsSource
-	0, // 1: steamdetail.v1.AppDetails.source:type_name -> steamdetail.v1.GetAppDetailsSource
-	3, // 2: steamdetail.v1.SteamDetailService.GetStorePageHTML:input_type -> steamdetail.v1.GetStorePageHTMLRequest
-	1, // 3: steamdetail.v1.SteamDetailService.GetAppDetails:input_type -> steamdetail.v1.GetAppDetailsRequest
-	4, // 4: steamdetail.v1.SteamDetailService.GetStorePageHTML:output_type -> steamdetail.v1.StorePageHTML
-	2, // 5: steamdetail.v1.SteamDetailService.GetAppDetails:output_type -> steamdetail.v1.AppDetails
-	4, // [4:6] is the sub-list for method output_type
-	2, // [2:4] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	0,  // 0: steamdetail.v1.GetAppDetailsRequest.source:type_name -> steamdetail.v1.GetAppDetailsSource
+	0,  // 1: steamdetail.v1.AppDetails.source:type_name -> steamdetail.v1.GetAppDetailsSource
+	9,  // 2: steamdetail.v1.SteamDetailService.GetStorePageHTML:input_type -> steamdetail.v1.GetStorePageHTMLRequest
+	7,  // 3: steamdetail.v1.SteamDetailService.GetAppDetails:input_type -> steamdetail.v1.GetAppDetailsRequest
+	1,  // 4: steamdetail.v1.SteamMetadataService.GetStoreItems:input_type -> steamdetail.v1.GetStoreItemsRequest
+	3,  // 5: steamdetail.v1.SteamMetadataService.GetTagList:input_type -> steamdetail.v1.GetTagListRequest
+	5,  // 6: steamdetail.v1.SteamMetadataService.GetDeckReport:input_type -> steamdetail.v1.GetDeckReportRequest
+	10, // 7: steamdetail.v1.SteamDetailService.GetStorePageHTML:output_type -> steamdetail.v1.StorePageHTML
+	8,  // 8: steamdetail.v1.SteamDetailService.GetAppDetails:output_type -> steamdetail.v1.AppDetails
+	2,  // 9: steamdetail.v1.SteamMetadataService.GetStoreItems:output_type -> steamdetail.v1.GetStoreItemsResponse
+	4,  // 10: steamdetail.v1.SteamMetadataService.GetTagList:output_type -> steamdetail.v1.GetTagListResponse
+	6,  // 11: steamdetail.v1.SteamMetadataService.GetDeckReport:output_type -> steamdetail.v1.GetDeckReportResponse
+	7,  // [7:12] is the sub-list for method output_type
+	2,  // [2:7] is the sub-list for method input_type
+	2,  // [2:2] is the sub-list for extension type_name
+	2,  // [2:2] is the sub-list for extension extendee
+	0,  // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_steamdetail_v1_steamdetail_proto_init() }
@@ -436,9 +792,9 @@ func file_steamdetail_v1_steamdetail_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_steamdetail_v1_steamdetail_proto_rawDesc), len(file_steamdetail_v1_steamdetail_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   4,
+			NumMessages:   10,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   2,
 		},
 		GoTypes:           file_steamdetail_v1_steamdetail_proto_goTypes,
 		DependencyIndexes: file_steamdetail_v1_steamdetail_proto_depIdxs,

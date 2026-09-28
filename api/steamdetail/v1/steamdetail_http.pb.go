@@ -126,3 +126,139 @@ func (c *SteamDetailServiceHTTPClientImpl) GetStorePageHTML(ctx context.Context,
 	}
 	return &out, nil
 }
+
+const OperationSteamMetadataServiceGetDeckReport = "/steamdetail.v1.SteamMetadataService/GetDeckReport"
+const OperationSteamMetadataServiceGetStoreItems = "/steamdetail.v1.SteamMetadataService/GetStoreItems"
+const OperationSteamMetadataServiceGetTagList = "/steamdetail.v1.SteamMetadataService/GetTagList"
+
+type SteamMetadataServiceHTTPServer interface {
+	GetDeckReport(context.Context, *GetDeckReportRequest) (*GetDeckReportResponse, error)
+	GetStoreItems(context.Context, *GetStoreItemsRequest) (*GetStoreItemsResponse, error)
+	GetTagList(context.Context, *GetTagListRequest) (*GetTagListResponse, error)
+}
+
+func RegisterSteamMetadataServiceHTTPServer(s *http.Server, srv SteamMetadataServiceHTTPServer) {
+	r := s.Route("/")
+	r.Handle("GET", "/v1/steamdetail/store-items", _SteamMetadataService_GetStoreItems0_HTTP_Handler(srv))
+	r.Handle("GET", "/v1/steamdetail/tags", _SteamMetadataService_GetTagList0_HTTP_Handler(srv))
+	r.Handle("GET", "/v1/steamdetail/deck-report", _SteamMetadataService_GetDeckReport0_HTTP_Handler(srv))
+}
+
+func _SteamMetadataService_GetStoreItems0_HTTP_Handler(srv SteamMetadataServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetStoreItemsRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSteamMetadataServiceGetStoreItems)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetStoreItems(ctx, req.(*GetStoreItemsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetStoreItemsResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SteamMetadataService_GetTagList0_HTTP_Handler(srv SteamMetadataServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetTagListRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSteamMetadataServiceGetTagList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetTagList(ctx, req.(*GetTagListRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetTagListResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SteamMetadataService_GetDeckReport0_HTTP_Handler(srv SteamMetadataServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetDeckReportRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSteamMetadataServiceGetDeckReport)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetDeckReport(ctx, req.(*GetDeckReportRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetDeckReportResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+type SteamMetadataServiceHTTPClient interface {
+	GetDeckReport(ctx context.Context, req *GetDeckReportRequest, opts ...http.CallOption) (rsp *GetDeckReportResponse, err error)
+	GetStoreItems(ctx context.Context, req *GetStoreItemsRequest, opts ...http.CallOption) (rsp *GetStoreItemsResponse, err error)
+	GetTagList(ctx context.Context, req *GetTagListRequest, opts ...http.CallOption) (rsp *GetTagListResponse, err error)
+}
+
+type SteamMetadataServiceHTTPClientImpl struct {
+	cc *http.Client
+}
+
+func NewSteamMetadataServiceHTTPClient(client *http.Client) SteamMetadataServiceHTTPClient {
+	return &SteamMetadataServiceHTTPClientImpl{client}
+}
+
+func (c *SteamMetadataServiceHTTPClientImpl) GetDeckReport(ctx context.Context, in *GetDeckReportRequest, opts ...http.CallOption) (*GetDeckReportResponse, error) {
+	var out GetDeckReportResponse
+	pattern := "/v1/steamdetail/deck-report"
+	path := steamhttpbinding.BuildPath(pattern, in, http.WithQueryParams())
+	opts = append([]http.CallOption{
+		http.Accept("application/protojson"),
+		http.Operation(OperationSteamMetadataServiceGetDeckReport),
+		http.PathTemplate(pattern),
+	}, opts...)
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *SteamMetadataServiceHTTPClientImpl) GetStoreItems(ctx context.Context, in *GetStoreItemsRequest, opts ...http.CallOption) (*GetStoreItemsResponse, error) {
+	var out GetStoreItemsResponse
+	pattern := "/v1/steamdetail/store-items"
+	path := steamhttpbinding.BuildPath(pattern, in, http.WithQueryParams())
+	opts = append([]http.CallOption{
+		http.Accept("application/protojson"),
+		http.Operation(OperationSteamMetadataServiceGetStoreItems),
+		http.PathTemplate(pattern),
+	}, opts...)
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *SteamMetadataServiceHTTPClientImpl) GetTagList(ctx context.Context, in *GetTagListRequest, opts ...http.CallOption) (*GetTagListResponse, error) {
+	var out GetTagListResponse
+	pattern := "/v1/steamdetail/tags"
+	path := steamhttpbinding.BuildPath(pattern, in, http.WithQueryParams())
+	opts = append([]http.CallOption{
+		http.Accept("application/protojson"),
+		http.Operation(OperationSteamMetadataServiceGetTagList),
+		http.PathTemplate(pattern),
+	}, opts...)
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}

@@ -277,6 +277,24 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/steamdetail.v1.AppDetails'
+    /v1/steamdetail/deck-report:
+        get:
+            tags:
+                - SteamMetadataService
+            operationId: SteamMetadataService_GetDeckReport
+            parameters:
+                - name: appId
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/steamdetail.v1.GetDeckReportResponse'
     /v1/steamdetail/store-html:
         get:
             tags:
@@ -304,6 +322,51 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/steamdetail.v1.StorePageHTML'
+    /v1/steamdetail/store-items:
+        get:
+            tags:
+                - SteamMetadataService
+            operationId: SteamMetadataService_GetStoreItems
+            parameters:
+                - name: appIds
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: integer
+                        format: int32
+                - name: language
+                  in: query
+                  schema:
+                    type: string
+                - name: country
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/steamdetail.v1.GetStoreItemsResponse'
+    /v1/steamdetail/tags:
+        get:
+            tags:
+                - SteamMetadataService
+            operationId: SteamMetadataService_GetTagList
+            parameters:
+                - name: language
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/steamdetail.v1.GetTagListResponse'
     /v1/steamonline/players/{appId}:
         get:
             tags:
@@ -746,6 +809,38 @@ components:
                     description: 实际使用的数据源，取值见 GetAppDetailsRequest.source。
                     format: enum
             description: AppDetails 是一次应用详情查询结果。
+        steamdetail.v1.GetDeckReportResponse:
+            type: object
+            properties:
+                appId:
+                    type: integer
+                    format: int32
+                rawJson:
+                    type: string
+                    format: bytes
+        steamdetail.v1.GetStoreItemsResponse:
+            type: object
+            properties:
+                appIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: int32
+                language:
+                    type: string
+                country:
+                    type: string
+                rawJson:
+                    type: string
+                    format: bytes
+        steamdetail.v1.GetTagListResponse:
+            type: object
+            properties:
+                language:
+                    type: string
+                rawJson:
+                    type: string
+                    format: bytes
         steamdetail.v1.StorePageHTML:
             type: object
             properties:
@@ -902,6 +997,10 @@ tags:
       description: |-
         SteamDetailService 提供 Steam 应用详情抓取能力。
          对应 steam-tasks 中 handlers/steam_detail 的 SteamAppDetailAPI 客户端逻辑。
+    - name: SteamMetadataService
+      description: |-
+        SteamMetadataService exposes bounded first-party metadata requests to tasks.
+         Responses are compact source JSON; tasks own persistence and ETL owns projection.
     - name: SteamOnlineService
       description: |-
         SteamOnlineService 提供 Steam 在线玩家数查询能力。
