@@ -128,11 +128,14 @@ func (c *SteamDetailServiceHTTPClientImpl) GetStorePageHTML(ctx context.Context,
 }
 
 const OperationSteamMetadataServiceGetDeckReport = "/steamdetail.v1.SteamMetadataService/GetDeckReport"
+const OperationSteamMetadataServiceGetPurchaseOptions = "/steamdetail.v1.SteamMetadataService/GetPurchaseOptions"
 const OperationSteamMetadataServiceGetStoreItems = "/steamdetail.v1.SteamMetadataService/GetStoreItems"
 const OperationSteamMetadataServiceGetTagList = "/steamdetail.v1.SteamMetadataService/GetTagList"
 
 type SteamMetadataServiceHTTPServer interface {
 	GetDeckReport(context.Context, *GetDeckReportRequest) (*GetDeckReportResponse, error)
+	// GetPurchaseOptions Bounded purchase-option facts. Reviews are never requested.
+	GetPurchaseOptions(context.Context, *GetPurchaseOptionsRequest) (*GetPurchaseOptionsResponse, error)
 	GetStoreItems(context.Context, *GetStoreItemsRequest) (*GetStoreItemsResponse, error)
 	GetTagList(context.Context, *GetTagListRequest) (*GetTagListResponse, error)
 }
@@ -140,6 +143,7 @@ type SteamMetadataServiceHTTPServer interface {
 func RegisterSteamMetadataServiceHTTPServer(s *http.Server, srv SteamMetadataServiceHTTPServer) {
 	r := s.Route("/")
 	r.Handle("GET", "/v1/steamdetail/store-items", _SteamMetadataService_GetStoreItems0_HTTP_Handler(srv))
+	r.Handle("GET", "/v1/steamdetail/purchase-options", _SteamMetadataService_GetPurchaseOptions0_HTTP_Handler(srv))
 	r.Handle("GET", "/v1/steamdetail/tags", _SteamMetadataService_GetTagList0_HTTP_Handler(srv))
 	r.Handle("GET", "/v1/steamdetail/deck-report", _SteamMetadataService_GetDeckReport0_HTTP_Handler(srv))
 }
@@ -159,6 +163,25 @@ func _SteamMetadataService_GetStoreItems0_HTTP_Handler(srv SteamMetadataServiceH
 			return err
 		}
 		reply := out.(*GetStoreItemsResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SteamMetadataService_GetPurchaseOptions0_HTTP_Handler(srv SteamMetadataServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetPurchaseOptionsRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSteamMetadataServiceGetPurchaseOptions)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetPurchaseOptions(ctx, req.(*GetPurchaseOptionsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetPurchaseOptionsResponse)
 		return ctx.Result(200, reply)
 	}
 }
@@ -203,6 +226,8 @@ func _SteamMetadataService_GetDeckReport0_HTTP_Handler(srv SteamMetadataServiceH
 
 type SteamMetadataServiceHTTPClient interface {
 	GetDeckReport(ctx context.Context, req *GetDeckReportRequest, opts ...http.CallOption) (rsp *GetDeckReportResponse, err error)
+	// GetPurchaseOptions Bounded purchase-option facts. Reviews are never requested.
+	GetPurchaseOptions(ctx context.Context, req *GetPurchaseOptionsRequest, opts ...http.CallOption) (rsp *GetPurchaseOptionsResponse, err error)
 	GetStoreItems(ctx context.Context, req *GetStoreItemsRequest, opts ...http.CallOption) (rsp *GetStoreItemsResponse, err error)
 	GetTagList(ctx context.Context, req *GetTagListRequest, opts ...http.CallOption) (rsp *GetTagListResponse, err error)
 }
@@ -222,6 +247,23 @@ func (c *SteamMetadataServiceHTTPClientImpl) GetDeckReport(ctx context.Context, 
 	opts = append([]http.CallOption{
 		http.Accept("application/protojson"),
 		http.Operation(OperationSteamMetadataServiceGetDeckReport),
+		http.PathTemplate(pattern),
+	}, opts...)
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// GetPurchaseOptions Bounded purchase-option facts. Reviews are never requested.
+func (c *SteamMetadataServiceHTTPClientImpl) GetPurchaseOptions(ctx context.Context, in *GetPurchaseOptionsRequest, opts ...http.CallOption) (*GetPurchaseOptionsResponse, error) {
+	var out GetPurchaseOptionsResponse
+	pattern := "/v1/steamdetail/purchase-options"
+	path := steamhttpbinding.BuildPath(pattern, in, http.WithQueryParams())
+	opts = append([]http.CallOption{
+		http.Accept("application/protojson"),
+		http.Operation(OperationSteamMetadataServiceGetPurchaseOptions),
 		http.PathTemplate(pattern),
 	}, opts...)
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
