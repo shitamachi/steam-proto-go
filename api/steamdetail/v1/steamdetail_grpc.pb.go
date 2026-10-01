@@ -173,6 +173,7 @@ var SteamDetailService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
+	SteamMetadataService_GetSupplemental_FullMethodName    = "/steamdetail.v1.SteamMetadataService/GetSupplemental"
 	SteamMetadataService_GetStoreItems_FullMethodName      = "/steamdetail.v1.SteamMetadataService/GetStoreItems"
 	SteamMetadataService_GetPurchaseOptions_FullMethodName = "/steamdetail.v1.SteamMetadataService/GetPurchaseOptions"
 	SteamMetadataService_GetTagList_FullMethodName         = "/steamdetail.v1.SteamMetadataService/GetTagList"
@@ -186,6 +187,8 @@ const (
 // SteamMetadataService exposes bounded first-party metadata requests to tasks.
 // Responses are compact source JSON; tasks own persistence and ETL owns projection.
 type SteamMetadataServiceClient interface {
+	// P5 fixed-purpose sources, bounded and admitted by the existing egress budget.
+	GetSupplemental(ctx context.Context, in *GetSupplementalRequest, opts ...grpc.CallOption) (*GetSupplementalResponse, error)
 	GetStoreItems(ctx context.Context, in *GetStoreItemsRequest, opts ...grpc.CallOption) (*GetStoreItemsResponse, error)
 	// Bounded purchase-option facts. Reviews are never requested.
 	GetPurchaseOptions(ctx context.Context, in *GetPurchaseOptionsRequest, opts ...grpc.CallOption) (*GetPurchaseOptionsResponse, error)
@@ -199,6 +202,16 @@ type steamMetadataServiceClient struct {
 
 func NewSteamMetadataServiceClient(cc grpc.ClientConnInterface) SteamMetadataServiceClient {
 	return &steamMetadataServiceClient{cc}
+}
+
+func (c *steamMetadataServiceClient) GetSupplemental(ctx context.Context, in *GetSupplementalRequest, opts ...grpc.CallOption) (*GetSupplementalResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetSupplementalResponse)
+	err := c.cc.Invoke(ctx, SteamMetadataService_GetSupplemental_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *steamMetadataServiceClient) GetStoreItems(ctx context.Context, in *GetStoreItemsRequest, opts ...grpc.CallOption) (*GetStoreItemsResponse, error) {
@@ -248,6 +261,8 @@ func (c *steamMetadataServiceClient) GetDeckReport(ctx context.Context, in *GetD
 // SteamMetadataService exposes bounded first-party metadata requests to tasks.
 // Responses are compact source JSON; tasks own persistence and ETL owns projection.
 type SteamMetadataServiceServer interface {
+	// P5 fixed-purpose sources, bounded and admitted by the existing egress budget.
+	GetSupplemental(context.Context, *GetSupplementalRequest) (*GetSupplementalResponse, error)
 	GetStoreItems(context.Context, *GetStoreItemsRequest) (*GetStoreItemsResponse, error)
 	// Bounded purchase-option facts. Reviews are never requested.
 	GetPurchaseOptions(context.Context, *GetPurchaseOptionsRequest) (*GetPurchaseOptionsResponse, error)
@@ -263,6 +278,9 @@ type SteamMetadataServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedSteamMetadataServiceServer struct{}
 
+func (UnimplementedSteamMetadataServiceServer) GetSupplemental(context.Context, *GetSupplementalRequest) (*GetSupplementalResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetSupplemental not implemented")
+}
 func (UnimplementedSteamMetadataServiceServer) GetStoreItems(context.Context, *GetStoreItemsRequest) (*GetStoreItemsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetStoreItems not implemented")
 }
@@ -294,6 +312,24 @@ func RegisterSteamMetadataServiceServer(s grpc.ServiceRegistrar, srv SteamMetada
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&SteamMetadataService_ServiceDesc, srv)
+}
+
+func _SteamMetadataService_GetSupplemental_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSupplementalRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SteamMetadataServiceServer).GetSupplemental(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SteamMetadataService_GetSupplemental_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SteamMetadataServiceServer).GetSupplemental(ctx, req.(*GetSupplementalRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _SteamMetadataService_GetStoreItems_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -375,6 +411,10 @@ var SteamMetadataService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "steamdetail.v1.SteamMetadataService",
 	HandlerType: (*SteamMetadataServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetSupplemental",
+			Handler:    _SteamMetadataService_GetSupplemental_Handler,
+		},
 		{
 			MethodName: "GetStoreItems",
 			Handler:    _SteamMetadataService_GetStoreItems_Handler,

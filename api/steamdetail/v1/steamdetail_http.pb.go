@@ -130,6 +130,7 @@ func (c *SteamDetailServiceHTTPClientImpl) GetStorePageHTML(ctx context.Context,
 const OperationSteamMetadataServiceGetDeckReport = "/steamdetail.v1.SteamMetadataService/GetDeckReport"
 const OperationSteamMetadataServiceGetPurchaseOptions = "/steamdetail.v1.SteamMetadataService/GetPurchaseOptions"
 const OperationSteamMetadataServiceGetStoreItems = "/steamdetail.v1.SteamMetadataService/GetStoreItems"
+const OperationSteamMetadataServiceGetSupplemental = "/steamdetail.v1.SteamMetadataService/GetSupplemental"
 const OperationSteamMetadataServiceGetTagList = "/steamdetail.v1.SteamMetadataService/GetTagList"
 
 type SteamMetadataServiceHTTPServer interface {
@@ -137,15 +138,37 @@ type SteamMetadataServiceHTTPServer interface {
 	// GetPurchaseOptions Bounded purchase-option facts. Reviews are never requested.
 	GetPurchaseOptions(context.Context, *GetPurchaseOptionsRequest) (*GetPurchaseOptionsResponse, error)
 	GetStoreItems(context.Context, *GetStoreItemsRequest) (*GetStoreItemsResponse, error)
+	// GetSupplemental P5 fixed-purpose sources, bounded and admitted by the existing egress budget.
+	GetSupplemental(context.Context, *GetSupplementalRequest) (*GetSupplementalResponse, error)
 	GetTagList(context.Context, *GetTagListRequest) (*GetTagListResponse, error)
 }
 
 func RegisterSteamMetadataServiceHTTPServer(s *http.Server, srv SteamMetadataServiceHTTPServer) {
 	r := s.Route("/")
+	r.Handle("GET", "/v1/steamdetail/supplemental", _SteamMetadataService_GetSupplemental0_HTTP_Handler(srv))
 	r.Handle("GET", "/v1/steamdetail/store-items", _SteamMetadataService_GetStoreItems0_HTTP_Handler(srv))
 	r.Handle("GET", "/v1/steamdetail/purchase-options", _SteamMetadataService_GetPurchaseOptions0_HTTP_Handler(srv))
 	r.Handle("GET", "/v1/steamdetail/tags", _SteamMetadataService_GetTagList0_HTTP_Handler(srv))
 	r.Handle("GET", "/v1/steamdetail/deck-report", _SteamMetadataService_GetDeckReport0_HTTP_Handler(srv))
+}
+
+func _SteamMetadataService_GetSupplemental0_HTTP_Handler(srv SteamMetadataServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetSupplementalRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSteamMetadataServiceGetSupplemental)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetSupplemental(ctx, req.(*GetSupplementalRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetSupplementalResponse)
+		return ctx.Result(200, reply)
+	}
 }
 
 func _SteamMetadataService_GetStoreItems0_HTTP_Handler(srv SteamMetadataServiceHTTPServer) func(ctx http.Context) error {
@@ -229,6 +252,8 @@ type SteamMetadataServiceHTTPClient interface {
 	// GetPurchaseOptions Bounded purchase-option facts. Reviews are never requested.
 	GetPurchaseOptions(ctx context.Context, req *GetPurchaseOptionsRequest, opts ...http.CallOption) (rsp *GetPurchaseOptionsResponse, err error)
 	GetStoreItems(ctx context.Context, req *GetStoreItemsRequest, opts ...http.CallOption) (rsp *GetStoreItemsResponse, err error)
+	// GetSupplemental P5 fixed-purpose sources, bounded and admitted by the existing egress budget.
+	GetSupplemental(ctx context.Context, req *GetSupplementalRequest, opts ...http.CallOption) (rsp *GetSupplementalResponse, err error)
 	GetTagList(ctx context.Context, req *GetTagListRequest, opts ...http.CallOption) (rsp *GetTagListResponse, err error)
 }
 
@@ -280,6 +305,23 @@ func (c *SteamMetadataServiceHTTPClientImpl) GetStoreItems(ctx context.Context, 
 	opts = append([]http.CallOption{
 		http.Accept("application/protojson"),
 		http.Operation(OperationSteamMetadataServiceGetStoreItems),
+		http.PathTemplate(pattern),
+	}, opts...)
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// GetSupplemental P5 fixed-purpose sources, bounded and admitted by the existing egress budget.
+func (c *SteamMetadataServiceHTTPClientImpl) GetSupplemental(ctx context.Context, in *GetSupplementalRequest, opts ...http.CallOption) (*GetSupplementalResponse, error) {
+	var out GetSupplementalResponse
+	pattern := "/v1/steamdetail/supplemental"
+	path := steamhttpbinding.BuildPath(pattern, in, http.WithQueryParams())
+	opts = append([]http.CallOption{
+		http.Accept("application/protojson"),
+		http.Operation(OperationSteamMetadataServiceGetSupplemental),
 		http.PathTemplate(pattern),
 	}, opts...)
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)

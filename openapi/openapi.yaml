@@ -379,6 +379,40 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/steamdetail.v1.GetStoreItemsResponse'
+    /v1/steamdetail/supplemental:
+        get:
+            tags:
+                - SteamMetadataService
+            description: P5 fixed-purpose sources, bounded and admitted by the existing egress budget.
+            operationId: SteamMetadataService_GetSupplemental
+            parameters:
+                - name: kind
+                  in: query
+                  schema:
+                    type: string
+                - name: appId
+                  in: query
+                  schema:
+                    type: string
+                - name: country
+                  in: query
+                  schema:
+                    type: string
+                - name: language
+                  in: query
+                  schema:
+                    type: string
+                - name: before
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/steamdetail.v1.GetSupplementalResponse'
     /v1/steamdetail/tags:
         get:
             tags:
@@ -877,6 +911,14 @@ components:
                 rawJson:
                     type: string
                     format: bytes
+        steamdetail.v1.GetSupplementalResponse:
+            type: object
+            properties:
+                factJson:
+                    type: string
+                    format: bytes
+                observedAt:
+                    type: string
         steamdetail.v1.GetTagListResponse:
             type: object
             properties:
