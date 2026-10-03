@@ -6,6 +6,24 @@ info:
     title: steam-api
     version: 0.0.1
 paths:
+    /v1/external-facts:collect:
+        post:
+            tags:
+                - ExternalFactsService
+            operationId: ExternalFactsService_GetExternalFacts
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/externalfacts.v1.GetExternalFactsRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/externalfacts.v1.GetExternalFactsResponse'
     /v1/steamallgames/apps:
         get:
             tags:
@@ -746,6 +764,34 @@ paths:
                     content: {}
 components:
     schemas:
+        externalfacts.v1.GetExternalFactsRequest:
+            type: object
+            properties:
+                provider:
+                    type: string
+                kind:
+                    type: string
+                appId:
+                    type: string
+                country:
+                    type: string
+                externalId:
+                    type: string
+                since:
+                    type: string
+                shopId:
+                    type: string
+            description: Fixed-purpose operations; credentials and arbitrary upstream URLs are never accepted.
+        externalfacts.v1.GetExternalFactsResponse:
+            type: object
+            properties:
+                factsJson:
+                    type: array
+                    items:
+                        type: string
+                        format: bytes
+                observedAt:
+                    type: string
         steamallgames.v1.AppInfo:
             type: object
             properties:
@@ -1070,6 +1116,7 @@ components:
                          Empty when there are no more results.
             description: TodoSet is a paginated collection of todo items returned by ListTodos.
 tags:
+    - name: ExternalFactsService
     - name: SteamAllGamesService
       description: |-
         SteamAllGamesService 提供 Steam 应用列表抓取能力。
