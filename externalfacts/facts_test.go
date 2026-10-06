@@ -203,3 +203,21 @@ func TestMarketCurrencyFallbackIsRejected(t *testing.T) {
 		t.Fatal("legacy source low lost original currency", e)
 	}
 }
+
+func TestCollectedRequiresFetchTimeButLegacyDecodeRemainsCompatible(t *testing.T) {
+	legacy := identity()
+	if err := legacy.Validate(); err != nil {
+		t.Fatal(err)
+	}
+	raw, _ := json.Marshal(legacy)
+	if _, err := Decode(raw); err != nil {
+		t.Fatalf("legacy decode broken: %v", err)
+	}
+	if legacy.ValidateCollected() == nil {
+		t.Fatal("new producer accepted missing fetch time")
+	}
+	legacy.FetchedAt = time.Now().UTC()
+	if err := legacy.ValidateCollected(); err != nil {
+		t.Fatal(err)
+	}
+}

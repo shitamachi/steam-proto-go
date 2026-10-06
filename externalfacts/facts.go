@@ -332,6 +332,16 @@ func (f Fact) Validate() error {
 	}
 	return nil
 }
+
+// ValidateCollected applies the producer contract. Validate/Decode remain
+// compatible with legacy v1 facts lacking supplier fetch time.
+func (f Fact) ValidateCollected() error {
+	if f.FetchedAt.IsZero() {
+		return fmt.Errorf("missing source fetch timestamp")
+	}
+	return f.Validate()
+}
+
 func Decode(raw []byte) (Fact, error) {
 	var f Fact
 	if len(raw) > MaxPayload || json.Unmarshal(raw, &f) != nil {
