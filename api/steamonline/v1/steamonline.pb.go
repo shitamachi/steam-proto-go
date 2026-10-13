@@ -36,6 +36,8 @@ const (
 	GetOnlinePlayersSource_GET_ONLINE_PLAYERS_SOURCE_LOCAL_REQUEST_STEAM_COMMUNITY_HTML_WITH_PROXY GetOnlinePlayersSource = 3
 	// 转发请求到远程服务器
 	GetOnlinePlayersSource_GET_ONLINE_PLAYERS_SOURCE_FORWARD_REQUEST_REMOTE_SERVER GetOnlinePlayersSource = 4
+	// 内部 Steam CM 会话服务（仅显式选择）。
+	GetOnlinePlayersSource_GET_ONLINE_PLAYERS_SOURCE_STEAM_CM GetOnlinePlayersSource = 5
 )
 
 // Enum value maps for GetOnlinePlayersSource.
@@ -46,6 +48,7 @@ var (
 		2: "GET_ONLINE_PLAYERS_SOURCE_STEAM_COMMUNITY_HTML",
 		3: "GET_ONLINE_PLAYERS_SOURCE_LOCAL_REQUEST_STEAM_COMMUNITY_HTML_WITH_PROXY",
 		4: "GET_ONLINE_PLAYERS_SOURCE_FORWARD_REQUEST_REMOTE_SERVER",
+		5: "GET_ONLINE_PLAYERS_SOURCE_STEAM_CM",
 	}
 	GetOnlinePlayersSource_value = map[string]int32{
 		"GET_ONLINE_PLAYERS_SOURCE_UNSPECIFIED":                                   0,
@@ -53,6 +56,7 @@ var (
 		"GET_ONLINE_PLAYERS_SOURCE_STEAM_COMMUNITY_HTML":                          2,
 		"GET_ONLINE_PLAYERS_SOURCE_LOCAL_REQUEST_STEAM_COMMUNITY_HTML_WITH_PROXY": 3,
 		"GET_ONLINE_PLAYERS_SOURCE_FORWARD_REQUEST_REMOTE_SERVER":                 4,
+		"GET_ONLINE_PLAYERS_SOURCE_STEAM_CM":                                      5,
 	}
 )
 
@@ -93,6 +97,7 @@ type GetOnlinePlayersRequest struct {
 	//   * `steam_community_html` - Steam 社区 HTML（走负载均衡 URL）
 	//   * `local_request_steam_community_html_with_proxy` - 本地代理请求社区 HTML
 	//   * `forward_request_remote_server` - 转发请求到远程服务器
+	//   * `steam_cm` - 内部 Steam CM 会话服务
 	// 为空时由服务端按内置策略选择。
 	Source        GetOnlinePlayersSource `protobuf:"varint,2,opt,name=source,proto3,enum=steamonline.v1.GetOnlinePlayersSource" json:"source,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -229,13 +234,14 @@ const file_steamonline_v1_steamonline_proto_rawDesc = "" +
 	"\fplayer_count\x18\x02 \x01(\x05R\vplayerCount\x12>\n" +
 	"\x06source\x18\x03 \x01(\x0e2&.steamonline.v1.GetOnlinePlayersSourceR\x06source\x129\n" +
 	"\n" +
-	"fetched_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tfetchedAt*\xa8\x02\n" +
+	"fetched_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tfetchedAt*\xd0\x02\n" +
 	"\x16GetOnlinePlayersSource\x12)\n" +
 	"%GET_ONLINE_PLAYERS_SOURCE_UNSPECIFIED\x10\x00\x12%\n" +
 	"!GET_ONLINE_PLAYERS_SOURCE_WEB_API\x10\x01\x122\n" +
 	".GET_ONLINE_PLAYERS_SOURCE_STEAM_COMMUNITY_HTML\x10\x02\x12K\n" +
 	"GGET_ONLINE_PLAYERS_SOURCE_LOCAL_REQUEST_STEAM_COMMUNITY_HTML_WITH_PROXY\x10\x03\x12;\n" +
-	"7GET_ONLINE_PLAYERS_SOURCE_FORWARD_REQUEST_REMOTE_SERVER\x10\x042\x9b\x01\n" +
+	"7GET_ONLINE_PLAYERS_SOURCE_FORWARD_REQUEST_REMOTE_SERVER\x10\x04\x12&\n" +
+	"\"GET_ONLINE_PLAYERS_SOURCE_STEAM_CM\x10\x052\x9b\x01\n" +
 	"\x12SteamOnlineService\x12\x84\x01\n" +
 	"\x10GetOnlinePlayers\x12'.steamonline.v1.GetOnlinePlayersRequest\x1a\x1d.steamonline.v1.OnlinePlayers\"(\x82\xd3\xe4\x93\x02\"\x12 /v1/steamonline/players/{app_id}B`\n" +
 	"\x0esteamonline.v1B\x10SteamOnlineProtoP\x01Z:github.com/shitamachi/steam-proto-go/api/steamonline/v1;v1b\x06proto3"

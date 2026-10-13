@@ -28,7 +28,7 @@ const (
 //
 // SteamOnlineService 提供 Steam 在线玩家数查询能力。
 // 对应 steam-tasks 中 handlers/steam_online 的 SteamOnlineAPI 客户端逻辑，
-// 支持四种数据源抓取在线玩家数。
+// 支持五种数据源抓取在线玩家数。
 type SteamOnlineServiceClient interface {
 	// GetOnlinePlayers 返回指定游戏当前的 Steam 在线玩家数。
 	// source 为空时由服务端按内置策略选择数据源。
@@ -60,7 +60,7 @@ func (c *steamOnlineServiceClient) GetOnlinePlayers(ctx context.Context, in *Get
 //
 // SteamOnlineService 提供 Steam 在线玩家数查询能力。
 // 对应 steam-tasks 中 handlers/steam_online 的 SteamOnlineAPI 客户端逻辑，
-// 支持四种数据源抓取在线玩家数。
+// 支持五种数据源抓取在线玩家数。
 type SteamOnlineServiceServer interface {
 	// GetOnlinePlayers 返回指定游戏当前的 Steam 在线玩家数。
 	// source 为空时由服务端按内置策略选择数据源。

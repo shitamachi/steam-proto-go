@@ -473,6 +473,7 @@ paths:
                        * `steam_community_html` - Steam 社区 HTML（走负载均衡 URL）
                        * `local_request_steam_community_html_with_proxy` - 本地代理请求社区 HTML
                        * `forward_request_remote_server` - 转发请求到远程服务器
+                       * `steam_cm` - 内部 Steam CM 会话服务
                      为空时由服务端按内置策略选择。
                   schema:
                     type: integer
@@ -1138,7 +1139,7 @@ tags:
       description: |-
         SteamOnlineService 提供 Steam 在线玩家数查询能力。
          对应 steam-tasks 中 handlers/steam_online 的 SteamOnlineAPI 客户端逻辑，
-         支持四种数据源抓取在线玩家数。
+         支持五种数据源抓取在线玩家数。
     - name: SteamReviewService
       description: |-
         SteamReviewService 提供 Steam 评论抓取能力。
