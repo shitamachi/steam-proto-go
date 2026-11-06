@@ -186,7 +186,10 @@ func (s Snapshot) Validate(q Query) error {
 			ids[v.ID] = true
 		}
 	case "achievements":
-		if s.Achievements == nil || !s.Achievements.DefinitionsComplete || len(s.Achievements.Items) > 1000 {
+		// Steam's largest schema seen in production is 1384 definitions (Train
+		// Simulator Classic), so a 1000-entry ceiling rejected a legitimate
+		// observation. Keep a bound that still fits one gRPC message.
+		if s.Achievements == nil || !s.Achievements.DefinitionsComplete || len(s.Achievements.Items) > 4096 {
 			return fmt.Errorf("invalid achievement definitions")
 		}
 		ids := map[string]bool{}

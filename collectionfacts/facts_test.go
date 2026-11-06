@@ -115,3 +115,25 @@ func TestSnapshotBoundaries(t *testing.T) {
 		t.Fatal("oneof")
 	}
 }
+
+// A schema above the old 1000-entry ceiling is a real observation, not a
+// malformed one: Steam reports 1384 definitions for App 24010.
+func TestAchievementSchemasAboveTheOldCeiling(t *testing.T) {
+	q := Query{Kind: "achievements", AppID: 24010, Language: "schinese"}
+	items := make([]Achievement, 0, 1384)
+	for i := 0; i < 1384; i++ {
+		items = append(items, Achievement{Name: fmt.Sprintf("ACH_%04d", i), DisplayName: "n", Description: "d"})
+	}
+	s := Snapshot{Achievements: &Achievements{DefinitionsComplete: true, Items: items}}
+	if e := s.Validate(q); e != nil {
+		t.Fatalf("1384 definitions rejected: %v", e)
+	}
+	over := make([]Achievement, 4097)
+	for i := range over {
+		over[i] = Achievement{Name: fmt.Sprintf("X_%04d", i)}
+	}
+	sized := Snapshot{Achievements: &Achievements{DefinitionsComplete: true, Items: over}}
+	if sized.Validate(q) == nil {
+		t.Fatal("oversized schema accepted")
+	}
+}
