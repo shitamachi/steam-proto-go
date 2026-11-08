@@ -4,8 +4,11 @@ package dataquality
 
 import (
 	"fmt"
-	f "github.com/shitamachi/steam-proto-go/externalfacts"
+	"strings"
 	"time"
+
+	f "github.com/shitamachi/steam-proto-go/externalfacts"
+	"github.com/shitamachi/steam-proto-go/priceregion"
 )
 
 type Scope struct {
@@ -48,7 +51,7 @@ func (r Request) Validate() error {
 			if s.PublishedCatalog || (s.Provider != "itad" && s.Provider != "igdb") || s.Provider == "itad" && !f.Market(s.Country) || s.Provider == "igdb" && (s.Country != "" || s.Capability != "external_identity" && s.Capability != "external_duration") || s.Provider == "itad" && s.Capability == "external_duration" {
 				return fmt.Errorf("invalid external scope")
 			}
-		} else if s.Provider != "steam" || s.Country != "" && !f.Market(s.Country) {
+		} else if s.Provider != "steam" || !steamMarket(s.Capability, s.Country) {
 			return fmt.Errorf("invalid steam scope")
 		}
 		key := s.RuleID + ":" + s.Capability + ":" + s.Provider + ":" + s.Country
@@ -65,6 +68,14 @@ func (r Request) Validate() error {
 		}
 	}
 	return nil
+}
+
+func steamMarket(capability, country string) bool {
+	if capability == "price" {
+		region, ok := priceregion.ByCountry(strings.ToLower(country))
+		return ok && strings.ToUpper(region.Country) == country
+	}
+	return country == "" || f.Market(country)
 }
 
 // TTL is a quality policy, never caller-controlled SQL or a provider guarantee.
