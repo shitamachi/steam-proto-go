@@ -3,9 +3,12 @@ package dataquality
 import (
 	"context"
 	"errors"
+	"strings"
 	"sync/atomic"
 	"testing"
 	"time"
+
+	"github.com/shitamachi/steam-proto-go/priceregion"
 )
 
 func TestContentAndTimePartitions(t *testing.T) {
@@ -103,5 +106,23 @@ func TestRequestBounds(t *testing.T) {
 	r.Scopes[0].PublishedCatalog = true
 	if r.Validate() == nil {
 		t.Fatal("external unbounded scope accepted")
+	}
+}
+
+func TestPriceQualityUsesAllCanonicalPriceMarkets(t *testing.T) {
+	r := Request{SchemaVersion: 1}
+	for _, region := range priceregion.All() {
+		r.Scopes = append(r.Scopes, Scope{Capability: "price", Provider: "steam", Country: strings.ToUpper(region.Country), PublishedCatalog: true})
+	}
+	if len(r.Scopes) != 41 || r.Validate() != nil {
+		t.Fatal("canonical Steam price markets were rejected")
+	}
+	r.Scopes[0].Country = "ALL"
+	if r.Validate() == nil {
+		t.Fatal("the selector all is not a price market")
+	}
+	r.Scopes = []Scope{{Capability: "external_low", Provider: "itad", Country: "AZ"}}
+	if r.Validate() == nil {
+		t.Fatal("Steam price representatives must not change external provider markets")
 	}
 }
